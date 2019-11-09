@@ -5,14 +5,16 @@ from text_box import text_box
 pygame.init()
 
 #Creating window and setting size
-win = pygame.display.set_mode((500,500))#, pygame.FULLSCREEN)
+win = pygame.display.set_mode((1200,650))#, pygame.FULLSCREEN)
 #Name of the app
 pygame.display.set_caption("Schelling Model Simulation")
 
 text_boxes = []
-text_boxes += [text_box(40, 100, 100, 20, border=2, is_number=True)]
-text_boxes += [text_box(40, 150, 100, 20, border=2)]
-text_boxes += [text_box(40, 200, 100, 20, border=2)]
+text_boxes += [text_box(0, 40, 100, 100, 20, border=2, is_number=True)]
+text_boxes += [text_box(1, 40, 150, 100, 20, border=2)]
+text_boxes += [text_box(2, 40, 200, 100, 20, border=2)]
+
+box_inputs = ['' for _ in range(len(text_boxes))]
 
 run = True
 while run:
@@ -31,11 +33,14 @@ while run:
 			if event.key == 27:
 				pygame.quit()
 				sys.exit()
+			elif event.key == 13:
+				for box in text_boxes:
+					if box.active:
+						box_inputs[box.id] = [box.return_value()]
 			else:
 				for box in text_boxes:
 					if box.active:
 						box.add_text(event.key)
-
 
 	#Update
 

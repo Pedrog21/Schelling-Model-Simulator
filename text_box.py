@@ -3,9 +3,10 @@ vec = pygame.math.Vector2
 
 class text_box():
 
-	def __init__(self, x, y, width, height, bg_colour=(166,166,166), active_colour=(255,255,255), 
+	def __init__(self, id, x, y, width, height, bg_colour=(166,166,166), active_colour=(255,255,255), 
 		text_size=12, text_colour=(0,0,0), border=0, border_colour=(0,0,0), is_number=False):
 		
+		self.id = id
 		self.x = x
 		self.y = y
 		self.width = width
@@ -22,7 +23,7 @@ class text_box():
 		self.text_colour = text_colour
 		self.border = border
 		self.border_colour = border_colour
-		self._numbers = [48,49,50,51,52,53,54,55,56,57]
+		self._numbers = [48,49,50,51,52,53,54,55,56,57,256,257,258,259,260,261,262,263,264,265]
 		#self._special = [8,13,32]
 		self.is_number = is_number
 
@@ -64,14 +65,8 @@ class text_box():
 	def add_text(self, key):
 		try:
 			if not self.is_number:
-				#Adding letters
-				if chr(key).isalpha():
-					text = list(self.text)
-					text.append(chr(key))
-					self.text = ''.join(text)
-					print(self.text)
 				#Backspace
-				elif key == 8:
+				if key == 8:
 					text = list(self.text)
 					text.pop()
 					self.text = ''.join(text)
@@ -80,28 +75,45 @@ class text_box():
 					text = list(self.text)
 					text.append(' ')
 					self.text = ''.join(text)
-				#Numbers
+				#Adding Numbers
 				elif key in self._numbers:
 					text = list(self.text)
-					text.append(str(key-48))
+					if key < 100:
+						text.append(str(key-48))
+					else:
+						text.append(str(key-256))
 					self.text = ''.join(text)
 				#Dot
 				elif key == 46:
 					text = list(self.text)
 					text.append('.')
 					self.text = ''.join(text)
+				#Adding letters
+				elif chr(key).isalpha():
+					text = list(self.text)
+					text.append(chr(key))
+					self.text = ''.join(text)
+					print(self.text)
 				else:
 					print(key)
 			else:
 				#Numbers
 				if key in self._numbers:
 					text = list(self.text)
-					text.append(str(key-48))
+					if key < 100:
+						text.append(str(key-48))
+					else:
+						text.append(str(key-256))
 					self.text = ''.join(text)
 				#Dot
 				elif key == 46:
 					text = list(self.text)
 					text.append('.')
+					self.text = ''.join(text)
+				#Backspace
+				if key == 8:
+					text = list(self.text)
+					text.pop()
 					self.text = ''.join(text)
 				else:
 					print(key)
@@ -118,7 +130,7 @@ class text_box():
 			self.active = False
 
 	def return_value(self):
-		if not is_number:
+		if not self.is_number:
 			return self.text
 		else:
-			return self.float(text)
+			return float(self.text)
