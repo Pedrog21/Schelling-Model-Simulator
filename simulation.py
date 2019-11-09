@@ -15,5 +15,6 @@ while run:
 
 	pygame.draw.circle(win, (0, 0, 255), (250, 250), 20)
 	pygame.display.update()
+	#O Pedro é burro
 
 pygame.quit()
