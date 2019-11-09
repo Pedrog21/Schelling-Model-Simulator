@@ -4,6 +4,6 @@ import numpy as np
 
 class City:
 
-	def __init__(self, size, n_neighbourhoods):
+	def __init__(self, size):
 
 		self.city_grid = np.zeros((size[0], size[1]))
