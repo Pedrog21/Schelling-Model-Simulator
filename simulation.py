@@ -1,4 +1,5 @@
 import pygame
+import sys 
 
 pygame.init()
 
@@ -14,10 +15,8 @@ while run:
 	#Check if exit button was pressed to exit the window
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			run = False
+			pygame.quit()
+			sys.exit()
 
-	if run:
-		pygame.draw.circle(win, (0, 0, 255), (250, 250), 20)
-		pygame.display.update()
-
-pygame.quit()
+	pygame.draw.circle(win, (0, 0, 255), (250, 250), 20)
+	pygame.display.update()
