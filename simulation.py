@@ -5,7 +5,7 @@ from text_box import text_box
 pygame.init()
 
 #Creating window and setting size
-win = pygame.display.set_mode((500,500), pygame.FULLSCREEN)
+win = pygame.display.set_mode((500,500))#, pygame.FULLSCREEN)
 #Name of the app
 pygame.display.set_caption("Schelling Model Simulation")
 
