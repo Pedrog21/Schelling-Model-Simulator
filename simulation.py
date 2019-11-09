@@ -1,6 +1,7 @@
 import pygame
 import sys 
 from text_box import text_box
+import City
 
 pygame.init()
 
@@ -10,11 +11,13 @@ win = pygame.display.set_mode((1200,650))#, pygame.FULLSCREEN)
 pygame.display.set_caption("Schelling Model Simulation")
 
 text_boxes = []
-text_boxes += [text_box(0, 40, 100, 100, 20, border=2, is_number=True)]
-text_boxes += [text_box(1, 40, 150, 100, 20, border=2)]
-text_boxes += [text_box(2, 40, 200, 100, 20, border=2)]
+text_boxes += [text_box(0, 1000, 100, 100, 20, border=2, is_number=True)]
+text_boxes += [text_box(1, 1000, 150, 100, 20, border=2)]
+text_boxes += [text_box(2, 1000, 200, 100, 20, border=2)]
 
 box_inputs = ['' for _ in range(len(text_boxes))]
+
+#city = City.city()
 
 run = True
 while run:
@@ -47,5 +50,7 @@ while run:
 	#Draw
 	for box in text_boxes:
 		box.draw(win)
+
+
 
 	pygame.display.update()
