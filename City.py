@@ -2,13 +2,9 @@ import numpy as np
 import pygame
 vec = pygame.math.Vector2
 
-#size is an array [a, b] where a is the width and b is the length of the city grid
 class city:
 
 	def __init__(self):
-		#self.width = size[0]
-		#self.height = size[1]
-		#self.city_grid = np.zeros((self.width, self.height))
 
 		self.running = False
 		self.square_size = 15
@@ -17,8 +13,16 @@ class city:
 		self.border = 1
 		self.border_colour = (0, 0, 0)
 
-	#def set_inputs(self,):
+	def set_inputs(self, size, percentages, empty_spots, n_traits=2, min_rate=0.3, max_rate=1):
 
+		self.width = size[0]
+		self.height = size[1]
+		self.city_grid = np.zeros((self.width, self.height))
+		self.percentages = percentages
+		self.empty_spots = empty_spots
+		self.n_traits = n_traits
+		self.min_rate = min_rate
+		self.max_rate = max_rate
 
 	def draw(self, window):
 		x0 = 20
@@ -39,3 +43,10 @@ class city:
 
 				pos = vec(x0 + i*self.square_size - self.border, y0 + j*self.square_size - self.border)
 				window.blit(self.square, pos)
+
+	def run(self):
+
+		self.running = True
+		
+
+	def update(self):
