@@ -17,7 +17,7 @@ text_boxes += [text_box(2, 1000, 200, 100, 20, border=2)]
 
 box_inputs = ['' for _ in range(len(text_boxes))]
 
-#city = City.city()
+simulation_city = City.city([60,35])
 
 run = True
 while run:
@@ -39,7 +39,8 @@ while run:
 			elif event.key == 13:
 				for box in text_boxes:
 					if box.active:
-						box_inputs[box.id] = [box.return_value()]
+						box_inputs[box.id] = box.return_value()
+				print(box_inputs)
 			else:
 				for box in text_boxes:
 					if box.active:
@@ -51,6 +52,7 @@ while run:
 	for box in text_boxes:
 		box.draw(win)
 
+	simulation_city.draw(win)
 
 
 	pygame.display.update()

@@ -24,7 +24,6 @@ class text_box():
 		self.border = border
 		self.border_colour = border_colour
 		self._numbers = [48,49,50,51,52,53,54,55,56,57,256,257,258,259,260,261,262,263,264,265]
-		#self._special = [8,13,32]
 		self.is_number = is_number
 
 	def update(self):
