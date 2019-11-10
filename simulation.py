@@ -18,7 +18,8 @@ text_boxes += [text_box(2, 1000, 200, 100, 20, border=2)]
 
 box_inputs = ['' for _ in range(len(text_boxes))]
 
-simulation_city = City.city([60,35])
+#Max 65x41 for now
+simulation_city = City.city([64,41])
 
 run = True
 while run:
