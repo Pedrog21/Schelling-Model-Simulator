@@ -62,8 +62,8 @@ class text_box(box):
 
 		window.blit(self.image, self.pos)
 
-	def draw_text(self, window):
-		text_surface = self.title_font.render(self.title, False, self.text_colour)#(243,193,74)) #window.get_colorkey())
+	def draw_title(self, window):
+		text_surface = self.title_font.render(self.title, False, self.text_colour)
 		window.blit(text_surface, self.title_pos)
 
 	def add_text(self, key):

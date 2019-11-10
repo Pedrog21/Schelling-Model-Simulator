@@ -5,7 +5,6 @@ import box
 from button import button
 import City
 
-#ola sou a mariana e estou a expeirmentar o git
 pygame.init()
 
 #Creating window and setting size
@@ -29,7 +28,7 @@ buttons = []
 #buttons += button()
 
 #Max 65x41 for now
-simulation_city = City.city([64,41])
+simulation_city = City.city([1,1])
 
 run = True
 while run:
@@ -45,9 +44,11 @@ while run:
 			for box in text_boxes:
 				box.check_click(pygame.mouse.get_pos())
 		if event.type == pygame.KEYDOWN:
+			#Close window when ESC key is pressed
 			if event.key == 27:
 				pygame.quit()
 				sys.exit()
+			#Write text in active boxes
 			else:
 				for box in text_boxes:
 					if box.active:
@@ -58,7 +59,7 @@ while run:
 	#Draw
 	for box in text_boxes:
 		box.draw(win)
-		box.draw_text(win)
+		box.draw_title(win)
 
 	simulation_city.draw(win)
 
