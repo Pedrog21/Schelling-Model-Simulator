@@ -36,9 +36,11 @@ simulation_city = City.city()
 #Intro Settings
 is_beggining = True
 intro_font = pygame.font.SysFont("times new roman", 40, bold=True)
+intro_font_1 = pygame.font.SysFont("times new roman", 20, bold=True)
 intro_text_colour = (0,51,102)
 intro_message = "Welcome to Schelling Model's Simulation!"
 intro_pos = vec(width//10, height//5)
+intro_pos_1 = vec(width//1.8, height//3)
 
 run = True
 while run:
@@ -49,6 +51,9 @@ while run:
 	if is_beggining:
 		text_surface = intro_font.render(intro_message, False, intro_text_colour)
 		win.blit(text_surface, intro_pos)
+		#Para apagar!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		text_surface = intro_font_1.render("Version 1.0", False, intro_text_colour)
+		win.blit(text_surface, intro_pos_1)
 
 	#Deactivating buttons
 	if start_button.active:
