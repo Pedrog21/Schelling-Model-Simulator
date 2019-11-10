@@ -1,17 +1,19 @@
 import pygame
+import math
+from box import box
 vec = pygame.math.Vector2
 
-class text_box():
+class text_box(box):
 
-	def __init__(self, id, x, y, width, height, bg_colour=(166,166,166), active_colour=(255,255,255), 
+	def __init__(self, x, y, width, height, title="", bg_colour=(166,166,166), active_colour=(255,255,255), 
 		text_size=12, text_colour=(0,0,0), border=0, border_colour=(0,0,0), is_number=False):
 		
-		self.id = id
 		self.x = x
 		self.y = y
 		self.width = width
 		self.height = height
 		self.pos = vec(x, y)
+		self.title_pos = vec(x, y - 20)
 		self.size = vec(width, height)
 		self.image = pygame.Surface([width, height])
 		self.bg_colour = bg_colour
@@ -20,14 +22,13 @@ class text_box():
 		self.text = ""
 		self.text_size = text_size
 		self.font = pygame.font.SysFont("arial", self.text_size)
+		self.title_font = pygame.font.SysFont("arial", math.floor(self.text_size*1.2), bold=True)
+		self.title = title
 		self.text_colour = text_colour
 		self.border = border
 		self.border_colour = border_colour
 		self._numbers = [48,49,50,51,52,53,54,55,56,57,256,257,258,259,260,261,262,263,264,265]
 		self.is_number = is_number
-
-	def update(self):
-		pass
 
 	def draw(self, window):
 		if not self.active:
@@ -61,6 +62,10 @@ class text_box():
 
 		window.blit(self.image, self.pos)
 
+	def draw_text(self, window):
+		text_surface = self.title_font.render(self.title, False, self.text_colour)#(243,193,74)) #window.get_colorkey())
+		window.blit(text_surface, self.title_pos)
+
 	def add_text(self, key):
 		try:
 			if not self.is_number:
@@ -92,7 +97,6 @@ class text_box():
 					text = list(self.text)
 					text.append(chr(key))
 					self.text = ''.join(text)
-					print(self.text)
 				else:
 					print(key)
 			else:
@@ -118,15 +122,6 @@ class text_box():
 					print(key)
 		except:
 			print(key)
-
-	def check_click(self, pos):
-		if pos[0] > self.x and pos[0] < self.x + self.width:
-			if pos[1] > self.y and pos[1] < self.y + self.height:
-				self.active = True
-			else:
-				self.active = False
-		else:
-			self.active = False
 
 	def return_value(self):
 		if not self.is_number:

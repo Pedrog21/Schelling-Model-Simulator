@@ -1,6 +1,8 @@
 import pygame
 import sys
 from text_box import text_box
+import box
+from button import button
 import City
 
 #ola sou a mariana e estou a expeirmentar o git
@@ -11,12 +13,20 @@ win = pygame.display.set_mode((1200,650))#, pygame.FULLSCREEN)
 #Name of the app
 pygame.display.set_caption("Schelling Model Simulation")
 
+#Adding Text Boxes
 text_boxes = []
-text_boxes += [text_box(0, 1000, 100, 100, 20, border=2, is_number=True)]
-text_boxes += [text_box(1, 1000, 150, 100, 20, border=2)]
-text_boxes += [text_box(2, 1000, 200, 100, 20, border=2)]
+text_boxes += [text_box(1000, 100, 100, 20, title="Number of Traits", border=1, is_number=True)]
+text_boxes += [text_box(1000, 150, 100, 20, title="Similar (%)", border=1, is_number=True)]
+text_boxes += [text_box(1000, 200, 100, 20, title="Red/Blue (%)", border=1, is_number=True)]
+text_boxes += [text_box(1000, 250, 100, 20, title="Empty Spots (%)", border=1, is_number=True)]
+text_boxes += [text_box(1000, 300, 100, 20, title="Width", border=1, is_number=True)]
+text_boxes += [text_box(1000, 350, 100, 20, title="Height", border=1, is_number=True)]
 
-box_inputs = ['' for _ in range(len(text_boxes))]
+box_inputs = {}
+
+#Adding Buttons
+buttons = []
+#buttons += button()
 
 #Max 65x41 for now
 simulation_city = City.city([64,41])
@@ -38,11 +48,6 @@ while run:
 			if event.key == 27:
 				pygame.quit()
 				sys.exit()
-			elif event.key == 13:
-				for box in text_boxes:
-					if box.active:
-						box_inputs[box.id] = box.return_value()
-				print(box_inputs)
 			else:
 				for box in text_boxes:
 					if box.active:
@@ -53,6 +58,7 @@ while run:
 	#Draw
 	for box in text_boxes:
 		box.draw(win)
+		box.draw_text(win)
 
 	simulation_city.draw(win)
 

@@ -18,7 +18,7 @@ class city:
 		self.empty_colour = (255, 255, 255)
 		self.trait1_colour = (0, 0, 255)
 		self.trait2_colour = (255, 0, 0)
-		self.border = 3
+		self.border = 1
 		self.border_colour = (0, 0, 0)
 
 
