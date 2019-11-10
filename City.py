@@ -13,6 +13,7 @@ class city:
 		self.city_grid[:,0] = np.ones(self.width)
 		self.city_grid[:,1] = 2*np.ones( self.width)
 
+		self.running = False
 		self.square_size = 15
 		self.square = pygame.Surface([self.square_size, self.square_size])
 		self.empty_colour = (255, 255, 255)

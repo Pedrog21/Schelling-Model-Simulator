@@ -25,35 +25,45 @@ text_boxes += [text_box(1000, 350, 100, 20, title="Height", border=1, is_number=
 box_inputs = {}
 
 #Adding Buttons
-buttons = []
-#buttons += button()
+start_button = button(1000, 400, 100, 40, text="Run")
 
 #Max 65x41 for now
-simulation_city = City.city([1,1])
+simulation_city = City.city([3,3])
 
 run = True
 while run:
 	#Changing background colour of the screen
 	win.fill((243,193,74))
 
+	#Deactivating buttons
+	if start_button.active:
+		start_button.deactivate()
+
 	#Events
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.quit()
 			sys.exit()
+		#Check where the mouse clicks
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			for box in text_boxes:
 				box.check_click(pygame.mouse.get_pos())
+			start_button.check_click(pygame.mouse.get_pos())
+			if start_button.active:
+				for box in text_boxes:	
+					box_inputs[box.title] = box.return_value()
+				print(box_inputs)
 		if event.type == pygame.KEYDOWN:
 			#Close window when ESC key is pressed
 			if event.key == 27:
 				pygame.quit()
 				sys.exit()
-			#Write text in active boxes
 			else:
+				#Write text in active boxes
 				for box in text_boxes:
 					if box.active:
 						box.add_text(event.key)
+
 
 	#Update
 
@@ -61,8 +71,8 @@ while run:
 	for box in text_boxes:
 		box.draw(win)
 		box.draw_title(win)
-
+	start_button.draw(win)
 	simulation_city.draw(win)
 
-
+	#Update
 	pygame.display.update()

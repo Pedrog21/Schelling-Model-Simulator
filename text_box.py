@@ -6,7 +6,7 @@ vec = pygame.math.Vector2
 class text_box(box):
 
 	def __init__(self, x, y, width, height, title="", bg_colour=(166,166,166), active_colour=(255,255,255), 
-		text_size=12, text_colour=(0,0,0), border=0, border_colour=(0,0,0), is_number=False):
+		text_size=12, text_colour=(0,51,102), border=0, border_colour=(0,0,0), is_number=False):
 		
 		self.x = x
 		self.y = y
@@ -22,7 +22,7 @@ class text_box(box):
 		self.text = ""
 		self.text_size = text_size
 		self.font = pygame.font.SysFont("arial", self.text_size)
-		self.title_font = pygame.font.SysFont("arial", math.floor(self.text_size*1.2), bold=True)
+		self.title_font = pygame.font.SysFont("times new roman", math.floor(self.text_size*1.2), bold=True)
 		self.title = title
 		self.text_colour = text_colour
 		self.border = border
