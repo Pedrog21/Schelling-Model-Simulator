@@ -5,22 +5,19 @@ vec = pygame.math.Vector2
 #size is an array [a, b] where a is the width and b is the length of the city grid
 class city:
 
-	def __init__(self, size):
-		self.width = size[0]
-		self.height = size[1]
-		self.city_grid = np.zeros((self.width, self.height))
-
-		self.city_grid[:,0] = np.ones(self.width)
-		self.city_grid[:,1] = 2*np.ones( self.width)
+	def __init__(self):
+		#self.width = size[0]
+		#self.height = size[1]
+		#self.city_grid = np.zeros((self.width, self.height))
 
 		self.running = False
 		self.square_size = 15
 		self.square = pygame.Surface([self.square_size, self.square_size])
 		self.empty_colour = (255, 255, 255)
-		self.trait1_colour = (0, 0, 255)
-		self.trait2_colour = (255, 0, 0)
 		self.border = 1
 		self.border_colour = (0, 0, 0)
+
+	#def set_inputs(self,):
 
 
 	def draw(self, window):
