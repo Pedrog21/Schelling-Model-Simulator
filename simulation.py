@@ -5,6 +5,7 @@ import box
 from button import button
 import City
 
+#ola sou a mariana e estou a expeirmentar o git e sou ganda croma
 pygame.init()
 
 #Creating window and setting size
