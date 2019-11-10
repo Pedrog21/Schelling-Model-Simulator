@@ -1,8 +1,9 @@
 import pygame
-import sys 
+import sys
 from text_box import text_box
 import City
 
+#ola sou a mariana e estou a expeirmentar o git
 pygame.init()
 
 #Creating window and setting size
