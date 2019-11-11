@@ -15,31 +15,13 @@ win = pygame.display.set_mode((width,height))#, pygame.FULLSCREEN)
 #Name of the app
 pygame.display.set_caption("Schelling Model's Simulation")
 
-#Adding Text Boxes
-text_boxes = []
-text_boxes += [text_box(1000, 100, 100, 20, title="Number of Traits", border=1, is_number=True)]
-text_boxes += [text_box(1000, 150, 100, 20, title="Similar (%)", border=1, is_number=True)]
-text_boxes += [text_box(1000, 200, 100, 20, title="Red/Blue (%)", border=1, is_number=True)]
-text_boxes += [text_box(1000, 250, 100, 20, title="Empty Spots (%)", border=1, is_number=True)]
-text_boxes += [text_box(1000, 300, 100, 20, title="Width", border=1, is_number=True)]
-text_boxes += [text_box(1000, 350, 100, 20, title="Height", border=1, is_number=True)]
-
-box_inputs = {}
-
-#Adding Buttons
-start_button = button(1000, 400, 100, 40, text="Run")
-
 #Max 65x41 for now
 simulation_city = City.city()
 
 #Intro Settings
 is_beggining = True
-intro_font = pygame.font.SysFont("times new roman", 40, bold=True)
-intro_font_1 = pygame.font.SysFont("times new roman", 20, bold=True)
-intro_text_colour = (0,51,102)
-intro_message = "Welcome to Schelling Model's Simulation!"
-intro_pos = vec(width//10, height//5)
-intro_pos_1 = vec(width//1.8, height//3)
+end_beginning = False
+
 
 run = True
 while run:
@@ -71,7 +53,7 @@ while run:
 			if start_button.active:
 				for box in text_boxes:	
 					box_inputs[box.title] = box.return_value()
-				print(box_inputs)
+				end_beginning = True
 		if event.type == pygame.KEYDOWN:
 			#Close window when ESC key is pressed
 			if event.key == 27:
@@ -85,8 +67,10 @@ while run:
 
 
 	#Update
-	if False:
-		is_beggining = False
+	if not end_beginning:
+		is_beginning = False
+	if simulation_city.running and start_button.active:
+		simulation_city.run(box_inputs)
 
 	#Draw
 	for box in text_boxes:

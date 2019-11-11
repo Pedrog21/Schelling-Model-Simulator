@@ -1,5 +1,6 @@
 import numpy as np
 import pygame
+import random as rnd
 vec = pygame.math.Vector2
 
 class city:
@@ -13,13 +14,13 @@ class city:
 		self.border = 1
 		self.border_colour = (0, 0, 0)
 
-	def set_inputs(self, size, percentages, empty_spots, n_traits=2, min_rate=0.3, max_rate=1):
+	def set_inputs(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1):
 
-		self.width = size[0]
-		self.height = size[1]
-		self.city_grid = np.zeros((self.width, self.height))
+		self.rows = size[0]
+		self.cols = size[1]
+		self.city_grid = np.zeros((self.rows, self.cols))
 		self.percentages = percentages
-		self.empty_spots = empty_spots
+		self.empty_percent = empty_percent
 		self.n_traits = n_traits
 		self.min_rate = min_rate
 		self.max_rate = max_rate
@@ -28,8 +29,8 @@ class city:
 		x0 = 20
 		y0 = 20
 
-		for i in range(self.width):
-			for j in range(self.height):
+		for i in range(self.rows):
+			for j in range(self.cols):
 				self.square.fill(self.border_colour)
 				if self.city_grid[i, j] == 0:
 					pygame.draw.rect(self.square, self.empty_colour, 
@@ -45,8 +46,39 @@ class city:
 				window.blit(self.square, pos)
 
 	def run(self):
-
+		
 		self.running = True
-				
+		total_dim = self.rows*self.cols
+		raw_index = np.arange(total_dim)
+		n_empty = math.floor(self.empty_percent*total_dim)
+		n_t1 = math.floor((total_dim - n_empty)*self.percentages[0])
+		n_t2 = total_dim - n_empty - n_t1
+
+		for i in range(n_empty):
+			rnd_index = rnd.randint(0, len(raw_index))
+			value = raw_index[rnd_index]
+			np.delete(raw_index, value)
+			position = gen_index(value)
+			self.city_grid[position[0],position[1]] = 0
+		for i in range(n_t1):
+			rnd_index = rnd.randint(0, len(raw_index))
+			value = raw_index[rnd_index]
+			np.delete(raw_index, value)
+			position = gen_index(value)
+			self.city_grid[position[0],position[1]] = 1
+		for i in range(n_t2):
+			rnd_index = rnd.randint(0, len(raw_index))
+			value = raw_index[rnd_index]
+			np.delete(raw_index, value)
+			position = gen_index(value)
+			self.city_grid[position[0],position[1]] = 2
+
+
+	def gen_index(self, value):
+		x = math.floor(value/self.cols)
+		y = value%self.cols
+
+		return [x, y]
+
 
 	#def update(self):
