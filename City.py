@@ -47,6 +47,6 @@ class city:
 	def run(self):
 
 		self.running = True
-		
+				
 
-	def update(self):
+	#def update(self):
