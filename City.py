@@ -14,6 +14,9 @@ class city:
 		self.empty_colour = (255, 255, 255)
 		self.border = 1
 		self.border_colour = (0, 0, 0)
+		self.empty_colour = (255, 255, 255)
+		self.trait1_colour = (0, 0, 255)
+		self.trait2_colour = (255, 0, 0)
 
 		self.rows = size[0]
 		self.cols = size[1]
@@ -25,6 +28,7 @@ class city:
 		self.max_rate = max_rate
 
 		self.running = True
+
 		total_dim = self.rows*self.cols
 		raw_index = np.arange(total_dim)
 		n_empty = math.floor(self.empty_percent*total_dim)
@@ -32,23 +36,26 @@ class city:
 		n_t2 = total_dim - n_empty - n_t1
 
 		for i in range(n_empty):
-			rnd_index = rnd.randint(0, len(raw_index))
+			rnd_index = rnd.randint(0, len(raw_index)-1)
 			value = raw_index[rnd_index]
-			np.delete(raw_index, value)
+			raw_index = np.delete(raw_index, rnd_index)
 			position = self.gen_index(value)
 			self.city_grid[position[0],position[1]] = 0
+
 		for i in range(n_t1):
-			rnd_index = rnd.randint(0, len(raw_index))
+			rnd_index = rnd.randint(0, len(raw_index)-1)
 			value = raw_index[rnd_index]
-			np.delete(raw_index, value)
+			raw_index = np.delete(raw_index, rnd_index)
 			position = self.gen_index(value)
 			self.city_grid[position[0],position[1]] = 1
+
 		for i in range(n_t2):
-			rnd_index = rnd.randint(0, len(raw_index))
+			rnd_index = rnd.randint(0, len(raw_index)-1)
 			value = raw_index[rnd_index]
-			np.delete(raw_index, value)
+			raw_index = np.delete(raw_index, rnd_index)
 			position = self.gen_index(value)
 			self.city_grid[position[0],position[1]] = 2
+
 
 	def draw(self, window):
 		x0 = 20
@@ -69,35 +76,6 @@ class city:
 
 				pos = vec(x0 + i*self.square_size - self.border, y0 + j*self.square_size - self.border)
 				window.blit(self.square, pos)
-
-	#def run(self):
-
-		# self.running = True
-		# total_dim = self.rows*self.cols
-		# raw_index = np.arange(total_dim)
-		# n_empty = math.floor(self.empty_percent*total_dim)
-		# n_t1 = math.floor((total_dim - n_empty)*self.percentages[0])
-		# n_t2 = total_dim - n_empty - n_t1
-
-		# for i in range(n_empty):
-		# 	rnd_index = rnd.randint(0, len(raw_index))
-		# 	value = raw_index[rnd_index]
-		# 	np.delete(raw_index, value)
-		# 	position = gen_index(value)
-		# 	self.city_grid[position[0],position[1]] = 0
-		# for i in range(n_t1):
-		# 	rnd_index = rnd.randint(0, len(raw_index))
-		# 	value = raw_index[rnd_index]
-		# 	np.delete(raw_index, value)
-		# 	position = gen_index(value)
-		# 	self.city_grid[position[0],position[1]] = 1
-		# for i in range(n_t2):
-		# 	rnd_index = rnd.randint(0, len(raw_index))
-		# 	value = raw_index[rnd_index]
-		# 	np.delete(raw_index, value)
-		# 	position = gen_index(value)
-		# 	self.city_grid[position[0],position[1]] = 2
-
 
 	def gen_index(self, value):
 		x = math.floor(value/self.cols)
