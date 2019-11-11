@@ -6,7 +6,6 @@ from button import button
 import City
 vec = pygame.math.Vector2
 
-#ola sou a mariana e estou a expeirmentar o git e sou ganda croma
 pygame.init()
 
 #Creating window and setting size
