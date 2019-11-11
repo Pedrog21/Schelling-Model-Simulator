@@ -1,11 +1,12 @@
 import numpy as np
 import pygame
 import random as rnd
+import math
 vec = pygame.math.Vector2
 
 class city:
 
-	def __init__(self):
+	def __init__(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1):
 
 		self.running = False
 		self.square_size = 15
@@ -13,8 +14,6 @@ class city:
 		self.empty_colour = (255, 255, 255)
 		self.border = 1
 		self.border_colour = (0, 0, 0)
-
-	def set_inputs(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1):
 
 		self.rows = size[0]
 		self.cols = size[1]
@@ -24,6 +23,32 @@ class city:
 		self.n_traits = n_traits
 		self.min_rate = min_rate
 		self.max_rate = max_rate
+
+		self.running = True
+		total_dim = self.rows*self.cols
+		raw_index = np.arange(total_dim)
+		n_empty = math.floor(self.empty_percent*total_dim)
+		n_t1 = math.floor((total_dim - n_empty)*self.percentages[0])
+		n_t2 = total_dim - n_empty - n_t1
+
+		for i in range(n_empty):
+			rnd_index = rnd.randint(0, len(raw_index))
+			value = raw_index[rnd_index]
+			np.delete(raw_index, value)
+			position = self.gen_index(value)
+			self.city_grid[position[0],position[1]] = 0
+		for i in range(n_t1):
+			rnd_index = rnd.randint(0, len(raw_index))
+			value = raw_index[rnd_index]
+			np.delete(raw_index, value)
+			position = self.gen_index(value)
+			self.city_grid[position[0],position[1]] = 1
+		for i in range(n_t2):
+			rnd_index = rnd.randint(0, len(raw_index))
+			value = raw_index[rnd_index]
+			np.delete(raw_index, value)
+			position = self.gen_index(value)
+			self.city_grid[position[0],position[1]] = 2
 
 	def draw(self, window):
 		x0 = 20
@@ -45,33 +70,33 @@ class city:
 				pos = vec(x0 + i*self.square_size - self.border, y0 + j*self.square_size - self.border)
 				window.blit(self.square, pos)
 
-	def run(self):
-		
-		self.running = True
-		total_dim = self.rows*self.cols
-		raw_index = np.arange(total_dim)
-		n_empty = math.floor(self.empty_percent*total_dim)
-		n_t1 = math.floor((total_dim - n_empty)*self.percentages[0])
-		n_t2 = total_dim - n_empty - n_t1
+	#def run(self):
 
-		for i in range(n_empty):
-			rnd_index = rnd.randint(0, len(raw_index))
-			value = raw_index[rnd_index]
-			np.delete(raw_index, value)
-			position = gen_index(value)
-			self.city_grid[position[0],position[1]] = 0
-		for i in range(n_t1):
-			rnd_index = rnd.randint(0, len(raw_index))
-			value = raw_index[rnd_index]
-			np.delete(raw_index, value)
-			position = gen_index(value)
-			self.city_grid[position[0],position[1]] = 1
-		for i in range(n_t2):
-			rnd_index = rnd.randint(0, len(raw_index))
-			value = raw_index[rnd_index]
-			np.delete(raw_index, value)
-			position = gen_index(value)
-			self.city_grid[position[0],position[1]] = 2
+		# self.running = True
+		# total_dim = self.rows*self.cols
+		# raw_index = np.arange(total_dim)
+		# n_empty = math.floor(self.empty_percent*total_dim)
+		# n_t1 = math.floor((total_dim - n_empty)*self.percentages[0])
+		# n_t2 = total_dim - n_empty - n_t1
+
+		# for i in range(n_empty):
+		# 	rnd_index = rnd.randint(0, len(raw_index))
+		# 	value = raw_index[rnd_index]
+		# 	np.delete(raw_index, value)
+		# 	position = gen_index(value)
+		# 	self.city_grid[position[0],position[1]] = 0
+		# for i in range(n_t1):
+		# 	rnd_index = rnd.randint(0, len(raw_index))
+		# 	value = raw_index[rnd_index]
+		# 	np.delete(raw_index, value)
+		# 	position = gen_index(value)
+		# 	self.city_grid[position[0],position[1]] = 1
+		# for i in range(n_t2):
+		# 	rnd_index = rnd.randint(0, len(raw_index))
+		# 	value = raw_index[rnd_index]
+		# 	np.delete(raw_index, value)
+		# 	position = gen_index(value)
+		# 	self.city_grid[position[0],position[1]] = 2
 
 
 	def gen_index(self, value):

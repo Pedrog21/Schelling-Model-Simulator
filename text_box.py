@@ -6,7 +6,7 @@ vec = pygame.math.Vector2
 class text_box(box):
 
 	def __init__(self, x, y, width, height, title="", bg_colour=(166,166,166), active_colour=(255,255,255), 
-		text_size=12, text_colour=(0,51,102), border=0, border_colour=(0,0,0), is_number=False):
+		text_size=12, text_colour=(0,51,102), border=0, border_colour=(0,0,0), is_int=False, is_float=False):
 		
 		self.x = x
 		self.y = y
@@ -28,7 +28,8 @@ class text_box(box):
 		self.border = border
 		self.border_colour = border_colour
 		self._numbers = [48,49,50,51,52,53,54,55,56,57,256,257,258,259,260,261,262,263,264,265]
-		self.is_number = is_number
+		self.is_int = is_int
+		self.is_float = is_float
 
 	def draw(self, window):
 		if not self.active:
@@ -68,7 +69,7 @@ class text_box(box):
 
 	def add_text(self, key):
 		try:
-			if not self.is_number:
+			if not (self.is_int or self.is_float):
 				#Backspace
 				if key == 8:
 					text = list(self.text)
@@ -124,7 +125,9 @@ class text_box(box):
 			print(key)
 
 	def return_value(self):
-		if not self.is_number:
-			return self.text
-		else:
+		if self.is_int:
+			return int(self.text)
+		elif self.is_float:
 			return float(self.text)
+		else:
+			return self.text
