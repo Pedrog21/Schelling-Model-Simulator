@@ -2,6 +2,7 @@ import pygame
 from screen import screen
 from text_box import text_box
 from button import button
+import sys
 vec = pygame.math.Vector2
 
 class main_screen(screen):

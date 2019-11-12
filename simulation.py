@@ -27,6 +27,7 @@ inputs_do = True
 
 run = True
 while run:
+	pygame.time.delay(100)
 	#Changing background colour of the screen
 	win.fill((243,193,74))
 

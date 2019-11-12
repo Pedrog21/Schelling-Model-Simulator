@@ -3,16 +3,18 @@ from screen import screen
 from text_box import text_box
 from button import button
 from City import city
+import sys
 vec = pygame.math.Vector2
 
 class running_screen(screen):
 
-	def __init__(self, width, height, window):
+	def __init__(self, width, height, window, delay=100):
 
 		self.width = width
 		self.height = height
 		self.window = window
 		self.running = False
+		self.delay = delay
 
 
 	def set_inputs(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1):
@@ -24,4 +26,13 @@ class running_screen(screen):
 		self.city = city(size, percentages, empty_percent, n_traits, min_rate, max_rate)
 
 	def run(self):
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type == pygame.KEYDOWN:
+				#Close window when ESC key is pressed
+				if event.key == 27:
+					pygame.quit()
+					sys.exit()
 		self.city.draw(self.window)
