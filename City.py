@@ -84,9 +84,12 @@ class city:
 	def gen_index(self, value):
 		x = math.floor(value/self.cols)
 		y = value%self.cols
-
 		return [x, y]
 
+	def gen_raw_index(self, index):
+		#return 
+		pass
+		
 	def check_unhappy(self):
 		pass
 
