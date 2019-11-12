@@ -26,6 +26,7 @@ class city:
 		self.n_traits = n_traits
 		self.min_rate = min_rate
 		self.max_rate = max_rate
+		self.empty = np.array([])
 
 		self.running = True
 
@@ -41,6 +42,7 @@ class city:
 			raw_index = np.delete(raw_index, rnd_index)
 			position = self.gen_index(value)
 			self.city_grid[position[0],position[1]] = 0
+			np.append(self.empty, rnd_index)
 
 		for i in range(n_t1):
 			rnd_index = rnd.randint(0, len(raw_index)-1)
@@ -55,6 +57,8 @@ class city:
 			raw_index = np.delete(raw_index, rnd_index)
 			position = self.gen_index(value)
 			self.city_grid[position[0],position[1]] = 2
+
+		self.unhappy = []
 
 
 	def draw(self, window):
@@ -83,5 +87,7 @@ class city:
 
 		return [x, y]
 
+	def check_unhappy(self):
+		pass
 
 	#def update(self):
