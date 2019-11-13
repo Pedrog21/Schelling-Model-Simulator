@@ -6,20 +6,21 @@ vec = pygame.math.Vector2
 
 class city:
 
-	def __init__(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1):
+	def __init__(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, max_iter=3000):
 
 		self.running = False
+		self.max_iter = max_iter
 		self.square_size = 15
 		self.square = pygame.Surface([self.square_size, self.square_size])
 		self.empty_colour = (255, 255, 255)
 		self.border = 1
 		self.border_colour = (0, 0, 0)
 		self.empty_colour = (255, 255, 255)
-		self.trait1_colour = (0, 0, 255)
-		self.trait2_colour = (255, 0, 0)
+		self.trait1_colour = (60, 113, 129)
+		self.trait2_colour = (129, 60, 108)
 
-		self.rows = size[0]
-		self.cols = size[1]
+		self.rows = int(size[0])
+		self.cols = int(size[1])
 		self.city_grid = np.zeros((self.rows, self.cols))
 		self.percentages = percentages
 		self.empty_percent = empty_percent
@@ -27,7 +28,9 @@ class city:
 		self.min_rate = min_rate
 		self.max_rate = max_rate
 		self.empty = np.array([])
+		self.empty.astype(int)
 
+		self.update_iter = 0
 		self.running = True
 
 		total_dim = self.rows*self.cols
@@ -39,10 +42,10 @@ class city:
 		for i in range(n_empty):
 			rnd_index = rnd.randint(0, len(raw_index)-1)
 			value = raw_index[rnd_index]
+			self.empty = np.append(self.empty, raw_index[rnd_index])
 			raw_index = np.delete(raw_index, rnd_index)
 			position = self.gen_index(value)
-			self.city_grid[position[0],position[1]] = 0
-			np.append(self.empty, rnd_index)
+			self.city_grid[position[0],position[1]] = 0			
 
 		for i in range(n_t1):
 			rnd_index = rnd.randint(0, len(raw_index)-1)
@@ -58,8 +61,10 @@ class city:
 			position = self.gen_index(value)
 			self.city_grid[position[0],position[1]] = 2
 
-		self.unhappy = []
+		self.unhappy = np.array([])
+		self.unhappy.astype(int)
 
+		self.set_unhappy()
 
 	def draw(self, window):
 		x0 = 20
@@ -81,16 +86,63 @@ class city:
 				pos = vec(x0 + i*self.square_size - self.border, y0 + j*self.square_size - self.border)
 				window.blit(self.square, pos)
 
+	def update(self):
+		if len(self.unhappy > 0) and self.update_iter <= self.max_iter:
+			print("unhappy ", self.unhappy)
+			print("empty ", self.empty)
+			rnd_index_empty = rnd.randint(0,len(self.empty)-1)
+			index_empty_processed = self.gen_index(self.empty[rnd_index_empty])
+			rnd_index_unhappy = rnd.randint(0,len(self.unhappy)-1)
+			index_unhappy_processed = self.gen_index(self.unhappy[rnd_index_unhappy])
+			value = self.city_grid[index_unhappy_processed[0], index_unhappy_processed[1]]
+
+			self.empty = np.append(self.empty, self.unhappy[rnd_index_unhappy])
+			self.city_grid[index_unhappy_processed[0], index_unhappy_processed[1]] = 0
+			self.city_grid[index_empty_processed[0], index_empty_processed[1]] = value
+			self.empty = np.delete(self.empty, rnd_index_empty)
+
+			self.unhappy = np.array([])
+			self.unhappy.astype(int)
+			self.set_unhappy()
+
+			self.update_iter +=1
+
+		else:
+			self.running = False
+
 	def gen_index(self, value):
 		x = math.floor(value/self.cols)
 		y = value%self.cols
-		return [x, y]
+		return [x, int(y)]
 
 	def gen_raw_index(self, index):
-		#return 
-		pass
+		return int(index[0]*self.cols + index[1])
 		
-	def check_unhappy(self):
-		pass
+	def set_unhappy(self):
+		for i in range(self.rows):
+			for j in range(self.cols):
+				if self.check_unhappy([i,j]):
+					self.unhappy = np.append(self.unhappy, self.gen_raw_index([i,j]))
 
-	#def update(self):
+	def check_unhappy(self, position):
+		x = position[0]
+		y = position[1]
+		same = 0
+		different = 0
+		pos = self.city_grid[x,y]
+
+		if not self.city_grid[x,y] == 0:			
+			for i in [-1,0,1]:
+				for j in [-1,0,1]:
+					if 0 <= x + i < self.rows and 0 <= y + j < self.cols and not (i == 0 and j == 0):
+						neig = self.city_grid[x+i, y+j]
+						if neig != 0 and pos == neig:
+							same += 1
+						elif neig != 0 and pos != neig:
+							different += 1
+			if same != 0 and different != 0:
+				return same/(same+different) < self.min_rate or same/(same+different) > self.max_rate
+			else:
+				return False
+		else:
+			return False

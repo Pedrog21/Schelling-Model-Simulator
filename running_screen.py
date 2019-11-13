@@ -8,7 +8,7 @@ vec = pygame.math.Vector2
 
 class running_screen(screen):
 
-	def __init__(self, width, height, window, delay=100):
+	def __init__(self, width, height, window, delay=500):
 
 		self.width = width
 		self.height = height
@@ -26,6 +26,7 @@ class running_screen(screen):
 		self.city = city(size, percentages, empty_percent, n_traits, min_rate, max_rate)
 
 	def run(self):
+		pygame.time.delay(self.delay)
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
@@ -36,3 +37,5 @@ class running_screen(screen):
 					pygame.quit()
 					sys.exit()
 		self.city.draw(self.window)
+		if self.city.running:
+			self.city.update()
