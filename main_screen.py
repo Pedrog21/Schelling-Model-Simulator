@@ -62,7 +62,20 @@ class main_screen(screen):
 				if event.key == 27:
 					pygame.quit()
 					sys.exit()
-				else:
+				#Configuring TAB key to change to the next text box
+				elif event.key == 9:
+					for i in range(len(self.text_boxes)):
+						if self.text_boxes[i].active:
+							self.text_boxes[i].active = False
+							if i == len(self.text_boxes)-1:
+								self.text_boxes[0].active = True
+								break
+							else:
+								self.text_boxes[i+1].active = True
+								break
+							print("box", i)
+
+				else:	
 					#Write text in active boxes
 					for box in self.text_boxes:
 						if box.active:

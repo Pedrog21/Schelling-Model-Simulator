@@ -88,8 +88,6 @@ class city:
 
 	def update(self):
 		if len(self.unhappy > 0) and self.update_iter <= self.max_iter:
-			print("unhappy ", self.unhappy)
-			print("empty ", self.empty)
 			rnd_index_empty = rnd.randint(0,len(self.empty)-1)
 			index_empty_processed = self.gen_index(self.empty[rnd_index_empty])
 			rnd_index_unhappy = rnd.randint(0,len(self.unhappy)-1)
@@ -131,7 +129,7 @@ class city:
 		different = 0
 		pos = self.city_grid[x,y]
 
-		if not self.city_grid[x,y] == 0:			
+		if pos != 0:			
 			for i in [-1,0,1]:
 				for j in [-1,0,1]:
 					if 0 <= x + i < self.rows and 0 <= y + j < self.cols and not (i == 0 and j == 0):
@@ -140,8 +138,9 @@ class city:
 							same += 1
 						elif neig != 0 and pos != neig:
 							different += 1
-			if same != 0 and different != 0:
-				return same/(same+different) < self.min_rate or same/(same+different) > self.max_rate
+			if same != 0 or different != 0:
+				rate = same/(same + different)
+				return rate < self.min_rate or rate > self.max_rate
 			else:
 				return False
 		else:
