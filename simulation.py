@@ -5,7 +5,7 @@ from button import button
 from main_screen import main_screen
 from running_screen import running_screen
 import box
-import City
+import city
 vec = pygame.math.Vector2
 
 pygame.init()

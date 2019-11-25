@@ -2,7 +2,7 @@ import pygame
 from screen import screen
 from text_box import text_box
 from button import button
-from City import city
+from city import city
 import sys
 vec = pygame.math.Vector2
 
