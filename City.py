@@ -15,20 +15,15 @@ class city:
 		self.border = 1
 		self.border_colour = (0, 0, 0)
 		self.empty_colour = (255, 255, 255)
-		first_colour = tuple(np.random.randint(256, size=3))
-		self.trait_colours = [first_colour]
-		for i in range(n_traits):
-			col1 = (first_colour[0] + 256/n_traits)%256
-			col2 = (first_colour[1] + 256/n_traits)%256
-			col3 = (first_colour[2] + 256/n_traits)%256
-			self.trait_colours += [tuple([col1, col2, col3])]
+		self.n_traits = n_traits
+		colours = [(168, 0, 0), (6, 52, 62), (6, 52, 158), (101, 177, 0), (82, 111, 158), (108, 73, 4), (49, 14, 18), (2, 52, 3), (246, 250, 3)]
+		self.trait_colours = colours[:self.n_traits]
 
 		self.rows = int(size[0])
 		self.cols = int(size[1])
 		self.city_grid = np.zeros((self.rows, self.cols))
 		self.percentages = percentages
 		self.empty_percent = empty_percent
-		self.n_traits = n_traits
 		self.min_rate = min_rate
 		self.max_rate = max_rate
 		self.empty = np.array([])
@@ -43,7 +38,6 @@ class city:
 		n_trait_individuals = []
 		for i in range(n_traits - 1):
 			n_trait_individuals += [math.floor((self.total_dim - n_empty)*self.percentages[i])]
-		print(n_trait_individuals)
 		n_trait_individuals += [self.total_dim - sum(n_trait_individuals) - n_empty]
 
 		for i in range(n_empty):
@@ -76,12 +70,12 @@ class city:
 				self.square.fill(self.border_colour)
 				if self.city_grid[i, j] == 0:
 					pygame.draw.rect(self.square, self.empty_colour, 
-						(self.border/2, self.border/2, self.square_size-self.border, self.square_size-self.border))
+						(self.border, self.border, self.square_size-self.border*2, self.square_size-self.border*2))
 				else:
 					pygame.draw.rect(self.square, self.trait_colours[int(self.city_grid[i, j]) - 1], 
-						(self.border/2, self.border/2, self.square_size-self.border, self.square_size-self.border))
+						(self.border, self.border, self.square_size-self.border*2, self.square_size-self.border*2))
 
-				pos = vec(x0 + i*self.square_size - self.border, y0 + j*self.square_size - self.border)
+				pos = vec(x0 + i*self.square_size - self.border/2, y0 + j*self.square_size - self.border/2)
 				window.blit(self.square, pos)
 
 	def update(self):

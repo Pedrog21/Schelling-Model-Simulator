@@ -28,19 +28,14 @@ class main_screen(screen):
 		self.start_button = button(1000, 400, 100, 40, text="Run")
 
 		self.intro_font = pygame.font.SysFont("times new roman", 40, bold=True)
-		self.intro_font_1 = pygame.font.SysFont("times new roman", 20, bold=True)
 		self.intro_text_colour = (0,51,102)
 		self.intro_message = "Welcome to Schelling Model's Simulation!"
 		self.intro_pos = vec(self.width//10, self.height//5)
-		self.intro_pos_1 = vec(self.width//1.8, self.height//3)
 
 	def run(self):
 		#Showing intro message
 		text_surface = self.intro_font.render(self.intro_message, False, self.intro_text_colour)
 		self.window.blit(text_surface, self.intro_pos)
-		#Para apagar!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		text_surface = self.intro_font_1.render("Version 1.0", False, self.intro_text_colour)
-		self.window.blit(text_surface, self.intro_pos_1)
 
 		#Events
 		for event in pygame.event.get():

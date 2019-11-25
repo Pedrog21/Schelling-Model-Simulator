@@ -28,7 +28,7 @@ inputs_do = True
 run = True
 while run:
 	#Changing background colour of the screen
-	win.fill((243,193,74))
+	win.fill((131,131,131))
 
 	if is_beginning:
 		main_screen.run()

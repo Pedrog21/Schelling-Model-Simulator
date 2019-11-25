@@ -15,13 +15,9 @@ class city_neigh:
 		self.border = 1
 		self.border_colour = (0, 0, 0)
 		self.empty_colour = (255, 255, 255)
-		first_colour = tuple(np.random.randint(256, size=3))
-		self.trait_colours = [first_colour]
-		for i in range(n_traits):
-			col1 = (first_colour[0] + 256/n_traits)%256
-			col2 = (first_colour[1] + 256/n_traits)%256
-			col3 = (first_colour[2] + 256/n_traits)%256
-			self.trait_colours += [tuple([col1, col2, col3])]
+		self.n_traits = n_traits
+		colours = [(168, 0, 0), (101, 177, 0), (6, 52, 62), (6, 52, 158), (82, 111, 158), (108, 73, 4), (49, 14, 18), (2, 52, 3), (246, 250, 3)]
+		self.trait_colours = colours[:self.n_traits]
 
 		self.n_neighs
 		self.rows = int(neigh_size[0])
@@ -32,7 +28,6 @@ class city_neigh:
 
 		self.percentages = percentages
 		self.empty_percent = empty_percent
-		self.n_traits = n_traits
 		self.min_rate = min_rate
 		self.max_rate = max_rate
 		self.empty = np.array([])
