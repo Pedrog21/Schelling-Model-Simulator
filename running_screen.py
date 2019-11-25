@@ -8,7 +8,7 @@ vec = pygame.math.Vector2
 
 class running_screen(screen):
 
-	def __init__(self, width, height, window, delay=20):
+	def __init__(self, width, height, window, delay=0):
 
 		self.width = width
 		self.height = height

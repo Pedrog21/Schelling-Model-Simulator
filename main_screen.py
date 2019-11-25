@@ -17,8 +17,6 @@ class main_screen(screen):
 
 		#Adding Text Boxes
 		self.text_boxes = []
-		self.text_boxes += [text_box(1000, 100, 100, 20, title="Number of Traits", border=1, is_int=True)]
-		self.text_boxes += [text_box(1000, 150, 100, 20, title="Similar (%)", border=1, is_float=True)]
 		self.text_boxes += [text_box(1000, 200, 100, 20, title="Red/Blue (%)", border=1, is_float=True)]
 		self.text_boxes += [text_box(1000, 250, 100, 20, title="Empty Spots (%)", border=1, is_float=True)]
 		self.text_boxes += [text_box(1000, 300, 100, 20, title="Width", border=1, is_int=True)]
@@ -74,7 +72,6 @@ class main_screen(screen):
 								self.text_boxes[i+1].active = True
 								break
 							print("box", i)
-
 				else:	
 					#Write text in active boxes
 					for box in self.text_boxes:
