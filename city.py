@@ -103,6 +103,9 @@ class city:
 			elif self.update_iter == self.max_iter:
 				print("Diverged")
 			self.running = False
+		#Definir isto!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		#self.segregation_level()
+
 
 	def gen_index(self, value):
 		x = math.floor(value/self.cols)

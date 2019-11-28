@@ -19,7 +19,7 @@ win = pygame.display.set_mode((width,height))#, pygame.FULLSCREEN)
 pygame.display.set_caption("Schelling Model's Simulation")
 
 #Creating first screen
-first_screen = first_screen(width, height, win)
+first = first_screen(width, height, win)
 
 #Info about current screen
 screens = dict()
@@ -32,28 +32,28 @@ while run:
 
 	#Selection of screen to show
 	if screens["first"]:
-		first_screen.run()
-		screens["first"] = first_screen.running
+		first.run()
+		screens["first"] = first.running
 		if not screens["first"]:
 			screens["main"] = True
-			if first_screen.action() == "Neighbourhoods":
-				main_screen = main_screen1(width, height, win)
+			if first.action() == "Neighbourhoods":
+				main = main_screen1(width, height, win)
 			else:
-				main_screen = main_screen(width, height, win)
+				main = main_screen(width, height, win)
 	elif screens["main"]:
-		inps = main_screen.run()
-		screens["main"] = main_screen.running
+		inps = main.run()
+		screens["main"] = main.running
 		if not screens["main"]:
-			inps = main_screen.return_inputs()
+			inps = main.return_inputs()
 			screens["running"] = True
-			running_screen = running_screen(width, height, win, "city")
-			running_screen.set_inputs(inps["size"], inps["percent"], inps["empty"], inps["traits"], inps["min"], inps["max"])
+			running = running_screen(width, height, win, "city")
+			running.set_inputs(inps["size"], inps["percent"], inps["empty"], inps["traits"], inps["min"], inps["max"])
 	else:
-		running_screen.run()
-		screens["running"] = running_screen.running
+		running.run()
+		screens["running"] = running.running
 		if not screens["running"]:
 			screens["first"] = True
-			first_screen = first_screen(width, height, win)
+			first = first_screen(width, height, win)
 
 	#Update
 	pygame.display.update()

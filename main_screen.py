@@ -128,7 +128,6 @@ class main_screen(screen):
 	
 	def return_inputs(self):
 		inps = dict()
-		print("hey")
 		inps["min"] = self.inputs["Minimum Neighbours (%)"]/100
 		inps["max"] = self.inputs["Maximum Neighbours (%)"]/100
 		inps["traits"] = self.inputs["Traits"]
