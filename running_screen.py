@@ -8,13 +8,14 @@ vec = pygame.math.Vector2
 
 class running_screen(screen):
 
-	def __init__(self, width, height, window, delay=0):
+	def __init__(self, width, height, window, screen_type, delay=0):
 
 		self.width = width
 		self.height = height
 		self.window = window
 		self.running = False
 		self.delay = delay
+		self.screen_type = screen_type
 
 
 	def set_inputs(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1):

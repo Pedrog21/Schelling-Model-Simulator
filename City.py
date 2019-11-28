@@ -6,7 +6,7 @@ vec = pygame.math.Vector2
 
 class city:
 
-	def __init__(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, max_iter=10000):
+	def __init__(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, max_iter=3000):
 
 		self.max_iter = max_iter
 		self.square_size = 15

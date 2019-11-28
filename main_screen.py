@@ -7,29 +7,35 @@ vec = pygame.math.Vector2
 
 class main_screen(screen):
 
-	def __init__(self, width, height, window):
+	def __init__(self, width, height, window, screen_type):
 
 		self.width = width
 		self.height = height
 		self.window = window
 
 		self.running = True
-
-		#Adding Text Boxes
+		self.traits_ready = False
 		self.text_boxes = []
-		self.text_boxes += [text_box(1000, 200, 100, 20, title="Red/Blue (%)", border=1, is_float=True)]
-		self.text_boxes += [text_box(1000, 250, 100, 20, title="Empty Spots (%)", border=1, is_float=True)]
-		self.text_boxes += [text_box(1000, 300, 100, 20, title="Width", border=1, is_int=True)]
-		self.text_boxes += [text_box(1000, 350, 100, 20, title="Height", border=1, is_int=True)]
+		self.buttons = []
+		self.screen_type = screen_type
 
-		self.box_inputs = {}
+		if(self.screen_type == "Regular Model"):
+			#Adding Text Boxes
+			self.text_boxes += [text_box(1000, 200, 100, 20, title="Number of Traits", border=1, is_int=True)]
+			self.text_boxes += [text_box(1000, 250, 100, 20, title="Empty Spots (%)", border=1, is_float=True)]
+			self.text_boxes += [text_box(1000, 300, 100, 20, title="Width", border=1, is_int=True)]
+			self.text_boxes += [text_box(1000, 350, 100, 20, title="Height", border=1, is_int=True)]
+			self.buttons += [button(1000, 150, 45, 20, text="2 Traits", text_size=10, hor_space=15, ver_space=4)]
+			self.buttons += [button(1050, 150, 45, 20, text="3 Traits", text_size=10, hor_space=15, ver_space=4)]
+
+		self.box_inputs = dict()
 
 		#Adding Buttons
-		self.start_button = button(1000, 400, 100, 40, text="Run")
+		self.start_button = button(1000, 550, 100, 40, text="Run")
 
 		self.intro_font = pygame.font.SysFont("times new roman", 40, bold=True)
 		self.intro_text_colour = (0,51,102)
-		self.intro_message = "Welcome to Schelling Model's Simulation!"
+		self.intro_message = "Set the parameters"
 		self.intro_pos = vec(self.width//10, self.height//5)
 
 	def run(self):
@@ -46,10 +52,16 @@ class main_screen(screen):
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				for box in self.text_boxes:
 					box.check_click(pygame.mouse.get_pos())
-				self.start_button.check_click(pygame.mouse.get_pos())
+				for button in self.buttons:
+					button.check_click(pygame.mouse.get_pos())
 				if self.start_button.active:
-					for box in self.text_boxes:	
-						self.box_inputs[box.title] = box.return_value()
+					if self.inputs_ready():
+						self.running = False
+						for box in self.text_boxes:	
+							self.box_inputs[box.title] = box.return_value()
+					else:
+						self.start_button.active = False
+					
 			if event.type == pygame.KEYDOWN:
 				#Close window when ESC key is pressed
 				if event.key == 27:
@@ -66,21 +78,19 @@ class main_screen(screen):
 							else:
 								self.text_boxes[i+1].active = True
 								break
-							print("box", i)
 				else:	
 					#Write text in active boxes
 					for box in self.text_boxes:
 						if box.active:
 							box.add_text(event.key)
 
-		#Drawing boxes					
+		#Drawing boxes and buttons			
 		for box in self.text_boxes:
 			box.draw(self.window)
 			box.draw_title(self.window)
 		self.start_button.draw(self.window)
-
-		if self.inputs_ready():
-			self.running = False
+		for button in self.buttons:
+			button.draw(self.window)
 
 	def inputs_ready(self):
 		try:

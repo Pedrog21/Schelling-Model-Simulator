@@ -17,14 +17,14 @@ class first_screen(screen):
 
 		#Adding Buttons
 		self.buttons = []
-		self.buttons += [button(1000, 400, 100, 40, text="Regular Model")]
-		self.buttons += [button(500, 400, 100, 40, text="Neighbourhoods")]
+		self.buttons += [button(750, 400, 300, 40, text="Regular Model", hor_space=125, ver_space=2)]
+		self.buttons += [button(150, 400, 250, 40, text="Neighbourhoods", hor_space=50, ver_space=2)]
 
 
 		self.intro_font = pygame.font.SysFont("times new roman", 40, bold=True)
 		self.intro_text_colour = (0,51,102)
 		self.intro_message = "Welcome to Schelling Model's Simulation!"
-		self.intro_pos = vec(self.width//10, self.height//5)
+		self.intro_pos = vec((self.width-len(self.intro_message)*18)/2, self.height//5)
 
 	def run(self):
 		#Showing intro message
@@ -51,9 +51,9 @@ class first_screen(screen):
 		#Drawing boxes					
 		for button in self.buttons:
 			button.draw(self.window)
-			button.draw_title(self.window)
 	
 	def action(self):
 		for button in self.buttons:
 			if button.active:
 				return button.text
+		return 0
