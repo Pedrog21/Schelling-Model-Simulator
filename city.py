@@ -6,7 +6,7 @@ vec = pygame.math.Vector2
 
 class city:
 
-	def __init__(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, max_iter=3000):
+	def __init__(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, max_iter=10000):
 
 		self.max_iter = max_iter
 		self.square_size = 15
@@ -16,7 +16,7 @@ class city:
 		self.border_colour = (0, 0, 0)
 		self.empty_colour = (255, 255, 255)
 		self.n_traits = n_traits
-		colours = [(168, 0, 0), (6, 52, 62), (6, 52, 158), (101, 177, 0), (82, 111, 158), (108, 73, 4), (49, 14, 18), (2, 52, 3), (246, 250, 3)]
+		colours = [(168, 0, 0), (6, 52, 62), (30, 117, 41), (255, 128, 0), (141, 69, 155)]
 		self.trait_colours = colours[:self.n_traits]
 
 		self.rows = int(size[0])
@@ -79,7 +79,7 @@ class city:
 				window.blit(self.square, pos)
 
 	def update(self):
-		if len(self.unhappy > 0) and self.update_iter <= self.max_iter:
+		if len(self.unhappy) > 0 and self.update_iter <= self.max_iter:
 			rnd_index_empty = rnd.randint(0,len(self.empty)-1)
 			index_empty_processed = self.gen_index(self.empty[rnd_index_empty])
 			rnd_index_unhappy = rnd.randint(0,len(self.unhappy)-1)
@@ -98,6 +98,10 @@ class city:
 			self.update_iter +=1
 
 		else:
+			if len(self.unhappy) == 0:
+				print("Converged")
+			elif self.update_iter == self.max_iter:
+				print("Diverged")
 			self.running = False
 
 	def gen_index(self, value):

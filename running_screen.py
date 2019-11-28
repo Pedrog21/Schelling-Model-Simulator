@@ -13,7 +13,7 @@ class running_screen(screen):
 		self.width = width
 		self.height = height
 		self.window = window
-		self.running = False
+		self.running = True
 		self.delay = delay
 		self.screen_type = screen_type
 
@@ -37,6 +37,12 @@ class running_screen(screen):
 				if event.key == 27:
 					pygame.quit()
 					sys.exit()
+
+		#Draw city grid
 		self.city.draw(self.window)
+		
+		#Update
 		if self.city.running:
 			self.city.update()
+		else:
+			pass

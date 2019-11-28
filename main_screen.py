@@ -7,7 +7,7 @@ vec = pygame.math.Vector2
 
 class main_screen(screen):
 
-	def __init__(self, width, height, window, screen_type):
+	def __init__(self, width, height, window):
 
 		self.width = width
 		self.height = height
@@ -18,33 +18,47 @@ class main_screen(screen):
 		self.text_boxes = []
 		self.buttons = []
 		self.buttons_dic = dict()
-		self.screen_type = screen_type
-		self.extra_boxes = 0
+		#self.screen_type = screen_type
 
-		if(self.screen_type == "Regular Model"):
-			#Adding Text Boxes
-			self.text_boxes += [text_box(1000, 150, 100, 20, title="Empty Spots (%)", border=1, is_float=True)]
-			self.text_boxes += [text_box(1000, 200, 100, 20, title="Width", border=1, is_int=True)]
-			self.text_boxes += [text_box(1000, 250, 100, 20, title="Height", border=1, is_int=True)]
-			self.buttons += [button(1000, 100, 45, 20, text="2 Traits", text_size=10, hor_space=15, ver_space=4)]
-			self.buttons_dic["2 Traits"] = False
-			self.buttons += [button(1050, 100, 45, 20, text="3 Traits", text_size=10, hor_space=15, ver_space=4)]
-			self.buttons_dic["3 Traits"] = False
+		#Adding Text Boxes
+		self.text_boxes += [text_box(1000, 100, 100, 20, title="Minimum Neighbours (%)", border=1, is_float=True)]
+		self.text_boxes += [text_box(1000, 150, 100, 20, title="Maximum Neighbours (%)", border=1, is_float=True)]
+		self.text_boxes += [text_box(1000, 200, 100, 20, title="Empty Spots (%)", border=1, is_float=True)]
+		self.text_boxes += [text_box(1000, 250, 100, 20, title="Width", border=1, is_int=True)]
+		self.text_boxes += [text_box(1000, 300, 100, 20, title="Height", border=1, is_int=True)]
 
-		self.box_inputs = dict()
+		self.inputs = dict()
+		self.inputs["Traits"] = 0
 
 		#Adding Buttons
-		self.start_button = button(1000, 450, 100, 40, text="Run", hor_space=50, ver_space=3)
+		self.start_button = button(925, 400, 100, 40, text="Run", hor_space=50, ver_space=2)
+		self.buttons += [button(850, 100, 20, 20, text="2", border=2, text_size=10, hor_space=15, ver_space=4)]
+		self.buttons_dic["2"] = False
+		self.buttons += [button(875, 100, 20, 20, text="3", border=2, text_size=10, hor_space=15, ver_space=4)]
+		self.buttons_dic["3"] = False
+		self.buttons += [button(900, 100, 20, 20, text="4", border=2, text_size=10, hor_space=16, ver_space=4)]
+		self.buttons_dic["4"] = False
+		self.buttons += [button(925, 100, 20, 20, text="5", border=2, text_size=10, hor_space=15, ver_space=4)]
+		self.buttons_dic["5"] = False
 
+		#Message settings
 		self.intro_font = pygame.font.SysFont("times new roman", 40, bold=True)
 		self.intro_text_colour = (0,51,102)
 		self.intro_message = "Set the parameters"
 		self.intro_pos = vec(self.width//10, self.height//5)
 
+		#Traits text settings
+		self.trait_font = pygame.font.SysFont("times new roman", 12, bold=True)
+		self.trait_text_colour = (0,51,102)
+		self.trait_message = "Number of Traits"
+		self.trait_pos = vec(850, 80)
+
 	def run(self):
-		#Showing intro message
+		#Showing message and button text
 		text_surface = self.intro_font.render(self.intro_message, False, self.intro_text_colour)
 		self.window.blit(text_surface, self.intro_pos)
+		text_surface = self.trait_font.render(self.trait_message, False, self.trait_text_colour)
+		self.window.blit(text_surface, self.trait_pos)
 
 		#Update number of extra boxes
 		self.add_boxes()
@@ -61,21 +75,19 @@ class main_screen(screen):
 				for button in self.buttons:
 					button.check_click(pygame.mouse.get_pos())
 					if button.active:
-						self.buttons_dic[button.text] = True	
-						if button.text == "2 Traits":
-							self.buttons_dic["3 Traits"] = False
-							self.extra_boxes = 2
-						else:
-							self.extra_boxes = 3
-							self.buttons_dic["2 Traits"] = False
+						self.buttons_dic[button.text] = True
+						self.inputs["Traits"] = int(button.text)
+						for but in self.buttons_dic:
+							if but != button.text:
+								self.buttons_dic[button.text] = False
 					if not self.buttons_dic[button.text]:
 						button.deactivate()
 				self.start_button.check_click(pygame.mouse.get_pos())
-				if self.start_button.active:
+				if self.start_button.active:		
+					for box in self.text_boxes:	
+						self.inputs[box.title] = box.return_value()
 					if self.inputs_ready():
 						self.running = False
-						for box in self.text_boxes:	
-							self.box_inputs[box.title] = box.return_value()
 					else:
 						self.start_button.active = False					
 			if event.type == pygame.KEYDOWN:
@@ -110,24 +122,31 @@ class main_screen(screen):
 
 	def inputs_ready(self):
 		try:
-			return (0 <= self.box_inputs["Number of Traits"] <= 1 and 0 <= self.box_inputs["Empty Spots (%)"] <= 1 
-				and self.box_inputs["Width"] != "" and self.box_inputs["Height"] != "")
+			return (self.inputs["Width"] != "" and self.inputs["Height"] != "")
 		except:
 			return False
 	
-	def inputs(self):
-		return [[self.box_inputs["Width"], self.box_inputs["Height"]], 
-			[self.box_inputs["Red/Blue (%)"], 1 - self.box_inputs["Red/Blue (%)"]],
-			self.box_inputs["Empty Spots (%)"]]
+	def return_inputs(self):
+		inps = dict()
+		print("hey")
+		inps["min"] = self.inputs["Minimum Neighbours (%)"]/100
+		inps["max"] = self.inputs["Maximum Neighbours (%)"]/100
+		inps["traits"] = self.inputs["Traits"]
+		inps["empty"] = self.inputs["Empty Spots (%)"]/100
+		inps["size"] = [self.inputs["Width"], self.inputs["Height"]]
+		inps["percent"] = []
+		for i in range(inps["traits"]):
+			inps["percent"] += [self.inputs["Percentage " + str(i+1)]/100]
+		return inps
 
 	def add_boxes(self):
-		k = len(self.text_boxes) - 3
-		while k != self.extra_boxes:
-			if self.extra_boxes > k:
-				self.text_boxes += [text_box(1000, 300 + k*50, 100, 20, title="Percentage " + str(k+1), border=1, is_float=True)]
+		k = len(self.text_boxes) - 5
+		while k != self.inputs["Traits"]:
+			if self.inputs["Traits"] > k:
+				self.text_boxes += [text_box(850, 150 + k*50, 100, 20, title="Percentage " + str(k+1), border=1, is_float=True)]
 			else:
 				self.text_boxes.pop()
-			k = len(self.text_boxes) - 3
+			k = len(self.text_boxes) - 5
 		return
 
 

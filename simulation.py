@@ -36,15 +36,18 @@ while run:
 		screens["first"] = first_screen.running
 		if not screens["first"]:
 			screens["main"] = True
-			main_screen = main_screen(width, height, win, first_screen.action())
+			if first_screen.action() == "Neighbourhoods":
+				main_screen = main_screen1(width, height, win)
+			else:
+				main_screen = main_screen(width, height, win)
 	elif screens["main"]:
-		main_screen.run()
+		inps = main_screen.run()
 		screens["main"] = main_screen.running
 		if not screens["main"]:
-			inputs = main_screen.inputs()
+			inps = main_screen.return_inputs()
 			screens["running"] = True
 			running_screen = running_screen(width, height, win, "city")
-			running_screen.set_inputs()
+			running_screen.set_inputs(inps["size"], inps["percent"], inps["empty"], inps["traits"], inps["min"], inps["max"])
 	else:
 		running_screen.run()
 		screens["running"] = running_screen.running
