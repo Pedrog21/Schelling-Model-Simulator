@@ -30,6 +30,7 @@ while run:
 	#Changing background colour of the screen
 	win.fill((131,131,131))
 
+	#Selection of screen to show
 	if screens["first"]:
 		first_screen.run()
 		screens["first"] = first_screen.running
@@ -40,15 +41,16 @@ while run:
 		main_screen.run()
 		screens["main"] = main_screen.running
 		if not screens["main"]:
+			inputs = main_screen.inputs()
 			screens["running"] = True
 			running_screen = running_screen(width, height, win, "city")
-			
-	#if not is_beginning:
-	#	if inputs_do:
-	#		running_inputs = main_screen.inputs()
-	#		running_screen.set_inputs(running_inputs[0], running_inputs[1], running_inputs[2])
-	#		inputs_do = False
-	#	running_screen.run()
+			running_screen.set_inputs()
+	else:
+		running_screen.run()
+		screens["running"] = running_screen.running
+		if not screens["running"]:
+			screens["first"] = True
+			first_screen = first_screen(width, height, win)
 
 	#Update
 	pygame.display.update()

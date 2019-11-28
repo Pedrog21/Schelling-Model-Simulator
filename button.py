@@ -51,3 +51,6 @@ class button(box):
 
 	def deactivate(self):
 		self.active = False
+
+	def activate(self):
+		self.active = True
