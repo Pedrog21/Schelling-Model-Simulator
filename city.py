@@ -62,7 +62,8 @@ class city:
 		self.unhappy = []
 		self.set_unhappy()
 		self.info = dict()
-		self.info["Initial Segregation Level: "] = float("{0:.5f}".format(self.segregation_level()))
+		self.info["Initial Segregation Level: "] = round(self.segregation_level(), 5)
+		self.unhappy_number = []
 
 	def draw(self, window):
 		x0 = 20
@@ -84,9 +85,12 @@ class city:
 		k = 0
 		for i in self.info:
 			pos = vec(900, 250 + k*50)
-			text_surface = self.text_font.render(i + str(self.info[i]), False, self.text_colour)
+			text_surface = self.text_font.render(i + str(self.info[i]) + "%", False, self.text_colour)
 			window.blit(text_surface, pos)
 			k += 1
+		for i in self.unhappy:
+			pos = vec(900, 250 + k*50)
+			text_surface = self.text_font.render("Unhappy People", False, self.text_colour)
 
 
 	def update(self):
@@ -108,12 +112,12 @@ class city:
 
 		else:
 			if len(self.unhappy) == 0:
-				self.info["Final Segregation Level: "] = float("{0:.5f}".format(self.segregation_level()))
-				self.info["Unhappy People: "] = len(self.unhappy)
+				self.info["Final Segregation Level: "] = round(self.segregation_level(), 5)
+				self.unhappy_number = [len(self.unhappy)]
 				print("Converged")
 			elif self.update_iter == self.max_iter:
-				self.info["Final Segregation Level: "] = float("{0:.5f}".format(self.segregation_level()))
-				self.info["Unhappy People: "] = len(self.unhappy)
+				self.info["Final Segregation Level: "] = round(self.segregation_level(), 5)
+				self.unhappy_number = [len(self.unhappy)]
 				print("Diverged")
 			self.running = False
 
@@ -183,7 +187,7 @@ class city:
 		y = position[1]
 
 		if 0 <= x < self.rows and 0 <= y < self.cols:
-			same = 0
+			diff = 0
 			pos = self.city_grid[x,y]
 
 			if pos != 0:			
@@ -191,9 +195,9 @@ class city:
 					for j in [-1,0,1]:
 						if 0 <= x + i < self.rows and 0 <= y + j < self.cols and not (i == 0 and j == 0):
 							neig = self.city_grid[x+i, y+j]
-							if neig != 0 and pos == neig:
-								same += 1
-				return same == 0
+							if neig != 0 and pos != neig:
+								diff += 1
+				return diff == 0
 			else:
 				return False
 		else:
@@ -205,5 +209,4 @@ class city:
 			for j in range(self.cols):
 				if self.check_segregated([i,j]):
 					seg += 1
-		print("Number of segregated people", seg)
-		return seg/self.total_dim
+		return (seg/self.total_dim)*100
