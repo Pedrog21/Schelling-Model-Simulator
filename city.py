@@ -62,8 +62,8 @@ class city:
 		self.unhappy = []
 		self.set_unhappy()
 		self.info = dict()
-		self.info["Initial Segregation Level: "] = round(self.segregation_level(), 5)
-		self.unhappy_number = []
+		self.info["Initial Segregation Level: "] = round(self.segregation_level())
+		self.info["Initial Isolation Level: "] = round(self.isolation_level())
 
 	def draw(self, window):
 		x0 = 20
@@ -84,14 +84,13 @@ class city:
 
 		k = 0
 		for i in self.info:
-			pos = vec(900, 250 + k*50)
-			text_surface = self.text_font.render(i + str(self.info[i]) + "%", False, self.text_colour)
+			pos = vec(950, 250 + k*30)
+			if(i[0] != "U"):
+				text_surface = self.text_font.render(i + str(self.info[i]) + "%", False, self.text_colour)
+			else:
+				text_surface = self.text_font.render(i + str(self.info[i]), False, self.text_colour)
 			window.blit(text_surface, pos)
 			k += 1
-		for i in self.unhappy:
-			pos = vec(900, 250 + k*50)
-			text_surface = self.text_font.render("Unhappy People", False, self.text_colour)
-
 
 	def update(self):
 		if len(self.unhappy) > 0 and self.update_iter <= self.max_iter:
@@ -105,19 +104,23 @@ class city:
 			self.city_grid[index_unhappy_processed[0], index_unhappy_processed[1]] = 0
 			self.city_grid[index_empty_processed[0], index_empty_processed[1]] = value
 			self.empty.pop(rnd_index_empty)
+			self.unhappy.pop(rnd_index_unhappy)
 
 			self.update_unhappy(index_unhappy_processed, index_empty_processed)
 
 			self.update_iter +=1
-
 		else:
+			unique, counts = np.unique(self.city_grid, return_counts=True)
+			print(dict(zip(unique, counts)))
 			if len(self.unhappy) == 0:
-				self.info["Final Segregation Level: "] = round(self.segregation_level(), 5)
-				self.unhappy_number = [len(self.unhappy)]
+				self.info["Final Segregation Level: "] = round(self.segregation_level())
+				self.info["Final Isolation Level: "] = round(self.isolation_level())
+				self.info["Unhappy People: "] = len(self.unhappy)
 				print("Converged")
 			elif self.update_iter == self.max_iter:
-				self.info["Final Segregation Level: "] = round(self.segregation_level(), 5)
-				self.unhappy_number = [len(self.unhappy)]
+				self.info["Final Segregation Level: "] = round(self.segregation_level())
+				self.info["Final Isolation Level: "] = round(self.isolation_level())
+				self.info["Unhappy People: "] = len(self.unhappy)
 				print("Diverged")
 			self.running = False
 
@@ -133,19 +136,22 @@ class city:
 		for i in [-1,0,1]:
 			for j in [-1,0,1]:
 
-				raw_pos = self.gen_raw_index([pos[0]+i, pos[1]+j])
-				if self.check_unhappy([pos[0]+i, pos[1]+j]) and i != 0 and j != 0:					
-					if not raw_pos in self.unhappy:
-						self.unhappy += [raw_pos]
-				elif raw_pos in self.unhappy:
-					self.unhappy.remove(raw_pos)
-						
+				if i != 0 and j != 0:
+					raw_pos = self.gen_raw_index([pos[0]+i, pos[1]+j])
+					if self.check_unhappy([pos[0]+i, pos[1]+j]):					
+						if not raw_pos in self.unhappy:
+							self.unhappy += [raw_pos]
+					else:
+						if raw_pos in self.unhappy:
+							self.unhappy.remove(raw_pos)
+				
 				raw_empty = self.gen_raw_index([empty[0]+i, empty[1]+j])
 				if self.check_unhappy([empty[0]+i, empty[1]+j]):				
 					if not raw_empty in self.unhappy:
 						self.unhappy += [raw_empty]
-				elif raw_empty in self.unhappy:
-					self.unhappy.remove(raw_empty)
+				else:
+					if raw_empty in self.unhappy:
+						self.unhappy.remove(raw_empty)
 
 	def set_unhappy(self):
 		for i in range(self.rows):
@@ -203,10 +209,35 @@ class city:
 		else:
 			return False
 
+	def neighbour_segregated(self, pos, grid):
+		if grid[pos[0], pos[1]] == 0:
+			return True
+		else:
+			for i in [-1, 0, 1]:
+				for j in [-1, 0, 1]:
+					x = pos[0] + i
+					y = pos[1] + j
+					if i != 0 and j != 0 and 0 <= x < self.rows and 0 <= y < self.cols:
+						if self.city_grid[pos[0], pos[1]] == self.city_grid[x, y] and grid[x, y] == 0:
+							return True
+			return False
+
 	def segregation_level(self):
-		seg = 0
+		seg_grid = np.ones((self.rows, self.cols))
 		for i in range(self.rows):
 			for j in range(self.cols):
 				if self.check_segregated([i,j]):
-					seg += 1
-		return (seg/self.total_dim)*100
+					seg_grid[i,j] = 0
+		for i in range(self.rows):
+			for j in range(self.cols):
+				if self.neighbour_segregated([i,j], seg_grid):
+					seg_grid[i,j] = 0
+		return ((self.total_dim - np.count_nonzero(seg_grid))/self.total_dim)*100
+
+	def isolation_level(self):
+		isol = 0
+		for i in range(self.rows):
+			for j in range(self.cols):
+				if self.check_segregated([i,j]):
+					isol += 1
+		return (isol/self.total_dim)*100
