@@ -2,6 +2,8 @@ import numpy as np
 import pygame
 import random as rnd
 import math
+from button import button
+from box import box
 vec = pygame.math.Vector2
 
 class city:
@@ -15,6 +17,8 @@ class city:
 		self.border = 1
 		self.border_colour = (0, 0, 0)
 		self.empty_colour = (255, 255, 255)
+		self.text_colour = (0,51,102)
+		self.text_font = pygame.font.SysFont("times new roman", 15, bold=True)
 		self.n_traits = n_traits
 		colours = [(168, 0, 0), (6, 52, 62), (30, 117, 41), (255, 128, 0), (141, 69, 155)]
 		self.trait_colours = colours[:self.n_traits]
@@ -26,8 +30,7 @@ class city:
 		self.empty_percent = empty_percent
 		self.min_rate = min_rate
 		self.max_rate = max_rate
-		self.empty = np.array([])
-		self.empty.astype(int)
+		self.empty = []
 
 		self.update_iter = 0
 		self.running = True
@@ -43,7 +46,7 @@ class city:
 		for i in range(n_empty):
 			rnd_index = rnd.randint(0, len(raw_index)-1)
 			value = raw_index[rnd_index]
-			self.empty = np.append(self.empty, raw_index[rnd_index])
+			self.empty += [raw_index[rnd_index]]
 			raw_index = np.delete(raw_index, rnd_index)
 			position = self.gen_index(value)
 			self.city_grid[position[0],position[1]] = 0			
@@ -56,10 +59,10 @@ class city:
 				position = self.gen_index(value)
 				self.city_grid[position[0],position[1]] = z + 1
 
-		self.unhappy = np.array([])
-		self.unhappy.astype(int)
-
+		self.unhappy = []
 		self.set_unhappy()
+		self.info = dict()
+		self.info["Initial Segregation Level: "] = float("{0:.5f}".format(self.segregation_level()))
 
 	def draw(self, window):
 		x0 = 20
@@ -78,6 +81,14 @@ class city:
 				pos = vec(x0 + i*self.square_size - self.border/2, y0 + j*self.square_size - self.border/2)
 				window.blit(self.square, pos)
 
+		k = 0
+		for i in self.info:
+			pos = vec(900, 250 + k*50)
+			text_surface = self.text_font.render(i + str(self.info[i]), False, self.text_colour)
+			window.blit(text_surface, pos)
+			k += 1
+
+
 	def update(self):
 		if len(self.unhappy) > 0 and self.update_iter <= self.max_iter:
 			rnd_index_empty = rnd.randint(0,len(self.empty)-1)
@@ -86,26 +97,25 @@ class city:
 			index_unhappy_processed = self.gen_index(self.unhappy[rnd_index_unhappy])
 			value = self.city_grid[index_unhappy_processed[0], index_unhappy_processed[1]]
 
-			self.empty = np.append(self.empty, self.unhappy[rnd_index_unhappy])
+			self.empty += [self.unhappy[rnd_index_unhappy]]
 			self.city_grid[index_unhappy_processed[0], index_unhappy_processed[1]] = 0
 			self.city_grid[index_empty_processed[0], index_empty_processed[1]] = value
-			self.empty = np.delete(self.empty, rnd_index_empty)
+			self.empty.pop(rnd_index_empty)
 
-			self.unhappy = np.array([])
-			self.unhappy.astype(int)
-			self.set_unhappy()
+			self.update_unhappy(index_unhappy_processed, index_empty_processed)
 
 			self.update_iter +=1
 
 		else:
 			if len(self.unhappy) == 0:
+				self.info["Final Segregation Level: "] = float("{0:.5f}".format(self.segregation_level()))
+				self.info["Unhappy People: "] = len(self.unhappy)
 				print("Converged")
 			elif self.update_iter == self.max_iter:
+				self.info["Final Segregation Level: "] = float("{0:.5f}".format(self.segregation_level()))
+				self.info["Unhappy People: "] = len(self.unhappy)
 				print("Diverged")
 			self.running = False
-		#Definir isto!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		#self.segregation_level()
-
 
 	def gen_index(self, value):
 		x = math.floor(value/self.cols)
@@ -115,32 +125,85 @@ class city:
 	def gen_raw_index(self, index):
 		return int(index[0]*self.cols + index[1])
 		
+	def update_unhappy(self, pos, empty):
+		for i in [-1,0,1]:
+			for j in [-1,0,1]:
+
+				raw_pos = self.gen_raw_index([pos[0]+i, pos[1]+j])
+				if self.check_unhappy([pos[0]+i, pos[1]+j]) and i != 0 and j != 0:					
+					if not raw_pos in self.unhappy:
+						self.unhappy += [raw_pos]
+				elif raw_pos in self.unhappy:
+					self.unhappy.remove(raw_pos)
+						
+				raw_empty = self.gen_raw_index([empty[0]+i, empty[1]+j])
+				if self.check_unhappy([empty[0]+i, empty[1]+j]):				
+					if not raw_empty in self.unhappy:
+						self.unhappy += [raw_empty]
+				elif raw_empty in self.unhappy:
+					self.unhappy.remove(raw_empty)
+
 	def set_unhappy(self):
 		for i in range(self.rows):
 			for j in range(self.cols):
 				if self.check_unhappy([i,j]):
-					self.unhappy = np.append(self.unhappy, self.gen_raw_index([i,j]))
+					self.unhappy += [self.gen_raw_index([i,j])]
+
 
 	def check_unhappy(self, position):
 		x = position[0]
 		y = position[1]
-		same = 0
-		different = 0
-		pos = self.city_grid[x,y]
 
-		if pos != 0:			
-			for i in [-1,0,1]:
-				for j in [-1,0,1]:
-					if 0 <= x + i < self.rows and 0 <= y + j < self.cols and not (i == 0 and j == 0):
-						neig = self.city_grid[x+i, y+j]
-						if neig != 0 and pos == neig:
-							same += 1
-						elif neig != 0 and pos != neig:
-							different += 1
-			if same != 0 or different != 0:
-				rate = same/(same + different)
-				return rate < self.min_rate or rate > self.max_rate
+		if 0 <= x < self.rows and 0 <= y < self.cols:
+			same = 0
+			different = 0
+			pos = self.city_grid[x,y]
+
+			if pos != 0:			
+				for i in [-1,0,1]:
+					for j in [-1,0,1]:
+						if 0 <= x + i < self.rows and 0 <= y + j < self.cols and not (i == 0 and j == 0):
+							neig = self.city_grid[x+i, y+j]
+							if neig != 0 and pos == neig:
+								same += 1
+							elif neig != 0 and pos != neig:
+								different += 1
+				if same != 0 or different != 0:
+					rate = same/(same + different) 
+					return rate < self.min_rate or rate > self.max_rate
+				else:
+					return False
 			else:
 				return False
 		else:
 			return False
+
+	def check_segregated(self, position):
+		x = position[0]
+		y = position[1]
+
+		if 0 <= x < self.rows and 0 <= y < self.cols:
+			same = 0
+			pos = self.city_grid[x,y]
+
+			if pos != 0:			
+				for i in [-1,0,1]:
+					for j in [-1,0,1]:
+						if 0 <= x + i < self.rows and 0 <= y + j < self.cols and not (i == 0 and j == 0):
+							neig = self.city_grid[x+i, y+j]
+							if neig != 0 and pos == neig:
+								same += 1
+				return same == 0
+			else:
+				return False
+		else:
+			return False
+
+	def segregation_level(self):
+		seg = 0
+		for i in range(self.rows):
+			for j in range(self.cols):
+				if self.check_segregated([i,j]):
+					seg += 1
+		print("Number of segregated people", seg)
+		return seg/self.total_dim

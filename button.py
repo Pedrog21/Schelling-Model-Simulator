@@ -13,8 +13,8 @@ class button(box):
 		self.width = width
 		self.height = height
 		self.pos = vec(x, y)
-		self.size = vec(width, height)
-		self.image = pygame.Surface([width, height])
+		self.size = vec(self.width, self.height)
+		self.image = pygame.Surface([self.width, self.height])
 		self.hor_space = hor_space
 		self.ver_space = ver_space
 		self.text = text
