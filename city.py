@@ -8,7 +8,7 @@ vec = pygame.math.Vector2
 
 class city:
 
-	def __init__(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, max_iter=10000):
+	def __init__(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, max_iter=3000):
 
 		self.max_iter = max_iter
 		self.square_size = 15
@@ -93,7 +93,7 @@ class city:
 			k += 1
 
 	def update(self):
-		if len(self.unhappy) > 0 and self.update_iter <= self.max_iter:
+		if len(self.unhappy) > 0 and self.update_iter < self.max_iter:
 			rnd_index_empty = rnd.randint(0,len(self.empty)-1)
 			index_empty_processed = self.gen_index(self.empty[rnd_index_empty])
 			rnd_index_unhappy = rnd.randint(0,len(self.unhappy)-1)
@@ -110,18 +110,14 @@ class city:
 
 			self.update_iter +=1
 		else:
-			unique, counts = np.unique(self.city_grid, return_counts=True)
-			print(dict(zip(unique, counts)))
 			if len(self.unhappy) == 0:
 				self.info["Final Segregation Level: "] = round(self.segregation_level())
 				self.info["Final Isolation Level: "] = round(self.isolation_level())
 				self.info["Unhappy People: "] = len(self.unhappy)
-				print("Converged")
 			elif self.update_iter == self.max_iter:
 				self.info["Final Segregation Level: "] = round(self.segregation_level())
 				self.info["Final Isolation Level: "] = round(self.isolation_level())
 				self.info["Unhappy People: "] = len(self.unhappy)
-				print("Diverged")
 			self.running = False
 
 	def gen_index(self, value):

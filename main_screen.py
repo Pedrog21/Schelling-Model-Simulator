@@ -7,7 +7,7 @@ vec = pygame.math.Vector2
 
 class main_screen(screen):
 
-	def __init__(self, width, height, window):
+	def __init__(self, width, height, window, screen_type):
 
 		self.width = width
 		self.height = height
@@ -18,7 +18,8 @@ class main_screen(screen):
 		self.text_boxes = []
 		self.buttons = []
 		self.buttons_dic = dict()
-		#self.screen_type = screen_type
+		self.screen_type = screen_type
+		print(self.screen_type)
 
 		#Adding Text Boxes
 		self.text_boxes += [text_box(1000, 100, 100, 20, title="Minimum Neighbours (%)", border=1, is_float=True)]
@@ -26,6 +27,9 @@ class main_screen(screen):
 		self.text_boxes += [text_box(1000, 200, 100, 20, title="Empty Spots (%)", border=1, is_float=True)]
 		self.text_boxes += [text_box(1000, 250, 100, 20, title="Width", border=1, is_int=True)]
 		self.text_boxes += [text_box(1000, 300, 100, 20, title="Height", border=1, is_int=True)]
+		if self.screen_type == "Neighbourhoods":
+			print("ola")
+			self.text_boxes += [text_box(1000, 350, 100, 20, title="Number of Neighbourhoods", border=1, is_float=True)]
 
 		self.inputs = dict()
 		self.inputs["Traits"] = 0
@@ -52,6 +56,11 @@ class main_screen(screen):
 		self.trait_text_colour = (0,51,102)
 		self.trait_message = "Number of Traits"
 		self.trait_pos = vec(850, 80)
+
+		#Error message settings
+		self.error_font = pygame.font.SysFont("times new roman", 8, bold=True)
+		self.error_text_colour = (0,0,0)
+		self.error_messages = dict()
 
 	def run(self):
 		#Showing message and button text
@@ -112,17 +121,60 @@ class main_screen(screen):
 						if box.active:
 							box.add_text(event.key)
 
-		#Drawing boxes and buttons			
+		#Drawing boxes, buttons	and possible error messages		
 		for box in self.text_boxes:
 			box.draw(self.window)
 			box.draw_title(self.window)
 		self.start_button.draw(self.window)
 		for button in self.buttons:
 			button.draw(self.window)
+		for error_message in self.error_messages:
+			error_vals = self.error_messages[error_message]
+			if error_vals[0] == 1:
+				text_surface = self.error_font.render(error_message, False, self.error_text_colour)
+				self.window.blit(text_surface, error_vals[1])
 
 	def inputs_ready(self):
+		booleans = []
 		try:
-			return (self.inputs["Width"] != "" and self.inputs["Height"] != "")
+			if 0 <= self.inputs["Minimum Neighbours (%)"] <= 100:
+				booleans += [True]
+				self.error_messages["Percentage must be between 0 and 100"] = [0, vec(1000, 120)]
+			else:
+				booleans += [False]
+				self.error_messages["Percentage must be between 0 and 100"] = [1, vec(1000, 120)]
+			if 0 <= self.inputs["Maximum Neighbours (%)"] <= 100:
+				booleans += [True]
+				self.error_messages["Percentage must be between 0 and 100"] = [0, vec(1000, 170)]
+			else:
+				booleans += [False]
+				self.error_messages["Percentage must be between 0 and 100"] = [1, vec(1000, 170)]
+			if 0 <= self.inputs["Empty Spots (%)"] <= 100:
+				booleans += [True]
+				self.error_messages["Percentage must be between 0 and 100"] = [0, vec(1000, 220)]
+			else:
+				booleans += [False]
+				self.error_messages["Percentage must be between 0 and 100"] = [1, vec(1000, 220)]				
+			if 1 <= self.inputs["Width"] <= 55:
+				booleans += [True]
+				self.error_messages["Width must be between 1 and 55"] = [0, vec(1000, 270)]
+			else:
+				booleans += [False]
+				self.error_messages["Width must be between 1 and 55"] = [1, vec(1000, 270)]
+			if 1 <= self.inputs["Height"] <= 35:
+				booleans += [True]
+				self.error_messages["Height must be between 1 and 35"] = [0, vec(1000, 320)]
+			else:
+				booleans += [False]
+				self.error_messages["Height must be between 1 and 35"] = [1, vec(1000, 320)]
+			if self.screen_type == "Neighbourhoods":
+				if self.inputs["Width"]*self.inputs["Number of Neighbourhoods"] <= 50 and self.inputs["Height"]*self.inputs["Number of Neighbourhoods"] <= 30:
+					booleans += [True]
+					self.error_messages["Size of neighbourhoods too big"] = [0, vec(1000, 370)]
+				else:
+					booleans += [False]
+					self.error_messages["Size of neighbourhoods too big"] = [1, vec(1000, 370)]
+			return all(booleans)
 		except:
 			return False
 	
@@ -134,18 +186,24 @@ class main_screen(screen):
 		inps["empty"] = self.inputs["Empty Spots (%)"]/100
 		inps["size"] = [self.inputs["Width"], self.inputs["Height"]]
 		inps["percent"] = []
+		if self.screen_type == "Neighbourhoods":
+			inps["neig"] = self.inputs["Number of Neighbourhoods"]
 		for i in range(inps["traits"]):
 			inps["percent"] += [self.inputs["Percentage " + str(i+1)]/100]
 		return inps
 
 	def add_boxes(self):
-		k = len(self.text_boxes) - 5
+		if self.screen_type == "Neighbourhoods":
+			fixed_boxes = 6
+		else:
+			fixed_boxes = 5
+		k = len(self.text_boxes) - fixed_boxes
 		while k != self.inputs["Traits"]:
 			if self.inputs["Traits"] > k:
 				self.text_boxes += [text_box(850, 150 + k*50, 100, 20, title="Percentage " + str(k+1), border=1, is_float=True)]
 			else:
 				self.text_boxes.pop()
-			k = len(self.text_boxes) - 5
+			k = len(self.text_boxes) - fixed_boxes
 		return
 
 

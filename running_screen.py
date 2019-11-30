@@ -3,6 +3,7 @@ from screen import screen
 from text_box import text_box
 from button import button
 from city import city
+from city_neigh import city_neigh
 import sys
 vec = pygame.math.Vector2
 
@@ -16,7 +17,7 @@ class running_screen(screen):
 		self.running = True
 		self.delay = delay
 		self.screen_type = screen_type
-		self.back_button = button(1000, 400, 100, 40, text="Back", hor_space=40, ver_space=2)
+		self.back_button = button(1000, 450, 100, 40, text="Back", hor_space=40, ver_space=2)
 
 
 	def set_inputs(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1):
@@ -25,7 +26,10 @@ class running_screen(screen):
 		self.n_traits = n_traits
 		self.min_rate = min_rate
 		self.max_rate = max_rate
-		self.city = city(size, percentages, empty_percent, n_traits, min_rate, max_rate)
+		if self.screen_type == "Neighbourhoods":
+			pass
+		else:
+			self.city = city(size, percentages, empty_percent, n_traits, min_rate, max_rate)
 
 	def run(self):
 		#Checking if back button is active to stop running

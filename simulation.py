@@ -37,9 +37,9 @@ while run:
 		if not screens["first"]:
 			screens["main"] = True
 			if first.action() == "Neighbourhoods":
-				main = main_screen1(width, height, win)
+				main = main_screen(width, height, win, first.action())
 			else:
-				main = main_screen(width, height, win)
+				main = main_screen(width, height, win, first.action())
 	elif screens["main"]:
 		inps = main.run()
 		screens["main"] = main.running
