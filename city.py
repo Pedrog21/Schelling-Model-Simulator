@@ -104,9 +104,12 @@ class city:
 			self.city_grid[index_unhappy_processed[0], index_unhappy_processed[1]] = 0
 			self.city_grid[index_empty_processed[0], index_empty_processed[1]] = value
 			self.empty.pop(rnd_index_empty)
-			self.unhappy.pop(rnd_index_unhappy)
+			#self.unhappy.pop(rnd_index_unhappy)
 
-			self.update_unhappy(index_unhappy_processed, index_empty_processed)
+			#self.update_unhappy(index_unhappy_processed, index_empty_processed)
+
+			self.unhappy = []
+			self.set_unhappy()
 
 			self.update_iter +=1
 		else:
