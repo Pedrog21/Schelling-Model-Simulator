@@ -61,6 +61,7 @@ class city:
 
 		self.unhappy = []
 		self.set_unhappy()
+		
 		self.info = dict()
 		self.info["Initial Segregation Level: "] = round(self.segregation_level())
 		self.info["Initial Isolation Level: "] = round(self.isolation_level())
@@ -131,26 +132,26 @@ class city:
 	def gen_raw_index(self, index):
 		return int(index[0]*self.cols + index[1])
 		
-	def update_unhappy(self, pos, empty):
-		for i in [-1,0,1]:
-			for j in [-1,0,1]:
+	# def update_unhappy(self, pos, empty):
+	# 	for i in [-1,0,1]:
+	# 		for j in [-1,0,1]:
 
-				if i != 0 and j != 0:
-					raw_pos = self.gen_raw_index([pos[0]+i, pos[1]+j])
-					if self.check_unhappy([pos[0]+i, pos[1]+j]):					
-						if not raw_pos in self.unhappy:
-							self.unhappy += [raw_pos]
-					else:
-						if raw_pos in self.unhappy:
-							self.unhappy.remove(raw_pos)
+	# 			if i != 0 and j != 0:
+	# 				raw_pos = self.gen_raw_index([pos[0]+i, pos[1]+j])
+	# 				if self.check_unhappy([pos[0]+i, pos[1]+j]):					
+	# 					if not raw_pos in self.unhappy:
+	# 						self.unhappy += [raw_pos]
+	# 				else:
+	# 					if raw_pos in self.unhappy:
+	# 						self.unhappy.remove(raw_pos)
 				
-				raw_empty = self.gen_raw_index([empty[0]+i, empty[1]+j])
-				if self.check_unhappy([empty[0]+i, empty[1]+j]):				
-					if not raw_empty in self.unhappy:
-						self.unhappy += [raw_empty]
-				else:
-					if raw_empty in self.unhappy:
-						self.unhappy.remove(raw_empty)
+	# 			raw_empty = self.gen_raw_index([empty[0]+i, empty[1]+j])
+	# 			if self.check_unhappy([empty[0]+i, empty[1]+j]):				
+	# 				if not raw_empty in self.unhappy:
+	# 					self.unhappy += [raw_empty]
+	# 			else:
+	# 				if raw_empty in self.unhappy:
+	# 					self.unhappy.remove(raw_empty)
 
 	def set_unhappy(self):
 		for i in range(self.rows):

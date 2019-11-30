@@ -60,8 +60,8 @@ class city_neigh:
 		self.unhappy = []
 		self.set_unhappy()
 		self.dim = 45//self.rows
+		self.info = dict()
 
-	#Corrigir distribuição dos bairros
 	def draw(self, window):
 		x0 = 15
 		y0 = 15
@@ -78,7 +78,14 @@ class city_neigh:
 							(self.border, self.border, self.square_size-self.border*2, self.square_size-self.border*2))
 
 					pos = vec(x0 + current_dims[0]*(self.rows*self.square_size + x0) + i*self.square_size - self.border, y0 + current_dims[1]*(self.cols*self.square_size + y0) + j*self.square_size - self.border)
-					window.blit(self.square, pos)			
+					window.blit(self.square, pos)	
+
+		k = 0
+		for i in self.info:
+			pos = vec(950, 250 + k*30)
+			text_surface = self.text_font.render(i + str(self.info[i]), False, self.text_colour)
+			window.blit(text_surface, pos)
+			k += 1		
 
 	def update(self):
 		if len(self.unhappy) > 0 and self.update_iter <= self.max_iter:
@@ -100,6 +107,7 @@ class city_neigh:
 
 		else:
 			self.running = False
+			self.info["Separated Neighbourhoods: "] = self.count_sep_neighs()
 
 	def gen_index(self, value):
 		dim_neigh = self.cols*self.rows
@@ -143,3 +151,21 @@ class city_neigh:
 				return False
 		else:
 			return False
+
+	def count_sep_neighs(self):
+		sep_neighs = 0
+		for i in range(self.n_neighs):
+			if self.is_separated(self.city_grid[i]):
+				sep_neighs += 1
+		return sep_neighs
+
+	def is_separated(self, neighbourhood):
+		val = -1
+		for i in range(self.rows):
+			for j in range(self.cols):
+				if val <= 0:
+					val = neighbourhood[i,j]
+				else:
+					if neighbourhood[i,j] != val:
+						return False
+		return True
