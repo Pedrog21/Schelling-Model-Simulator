@@ -168,6 +168,6 @@ class city_neigh:
 				if val <= 0:
 					val = neighbourhood[i,j]
 				else:
-					if neighbourhood[i,j] != val:
+					if neighbourhood[i,j] != val and neighbourhood[i,j] != 0:
 						return False
 		return True
