@@ -15,6 +15,8 @@ class city_neigh:
 		self.border = 1
 		self.border_colour = (0, 0, 0)
 		self.empty_colour = (255, 255, 255)
+		self.text_colour = (0,51,102)
+		self.text_font = pygame.font.SysFont("times new roman", 15, bold=True)
 		self.n_traits = n_traits
 		colours = [(168, 0, 0), (6, 52, 62), (30, 117, 41), (255, 128, 0), (141, 69, 155)]
 		self.trait_colours = colours[:self.n_traits]
