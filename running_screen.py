@@ -20,14 +20,9 @@ class running_screen(screen):
 		self.back_button = button(1000, 450, 100, 40, text="Back", hor_space=40, ver_space=2)
 
 
-	def set_inputs(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1):
-		self.percentages = percentages
-		self.empty_percent = empty_percent
-		self.n_traits = n_traits
-		self.min_rate = min_rate
-		self.max_rate = max_rate
+	def set_inputs(self, size, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, n_neighs=0):
 		if self.screen_type == "Neighbourhoods":
-			pass
+			self.city = city_neigh(size, n_neighs, percentages, empty_percent, n_traits, min_rate, max_rate)
 		else:
 			self.city = city(size, percentages, empty_percent, n_traits, min_rate, max_rate)
 

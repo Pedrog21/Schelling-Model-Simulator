@@ -19,7 +19,6 @@ class main_screen(screen):
 		self.buttons = []
 		self.buttons_dic = dict()
 		self.screen_type = screen_type
-		print(self.screen_type)
 
 		#Adding Text Boxes
 		self.text_boxes += [text_box(1000, 100, 100, 20, title="Minimum Neighbours (%)", border=1, is_float=True)]
@@ -28,8 +27,7 @@ class main_screen(screen):
 		self.text_boxes += [text_box(1000, 250, 100, 20, title="Width", border=1, is_int=True)]
 		self.text_boxes += [text_box(1000, 300, 100, 20, title="Height", border=1, is_int=True)]
 		if self.screen_type == "Neighbourhoods":
-			print("ola")
-			self.text_boxes += [text_box(1000, 350, 100, 20, title="Number of Neighbourhoods", border=1, is_float=True)]
+			self.text_boxes += [text_box(1000, 350, 100, 20, title="Number of Neighbourhoods", border=1, is_int=True)]
 
 		self.inputs = dict()
 		self.inputs["Traits"] = 0
@@ -167,13 +165,6 @@ class main_screen(screen):
 			else:
 				booleans += [False]
 				self.error_messages["Height must be between 1 and 35"] = [1, vec(1000, 320)]
-			if self.screen_type == "Neighbourhoods":
-				if self.inputs["Width"]*self.inputs["Number of Neighbourhoods"] <= 50 and self.inputs["Height"]*self.inputs["Number of Neighbourhoods"] <= 30:
-					booleans += [True]
-					self.error_messages["Size of neighbourhoods too big"] = [0, vec(1000, 370)]
-				else:
-					booleans += [False]
-					self.error_messages["Size of neighbourhoods too big"] = [1, vec(1000, 370)]
 			return all(booleans)
 		except:
 			return False

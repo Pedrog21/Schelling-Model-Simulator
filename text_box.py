@@ -98,8 +98,6 @@ class text_box(box):
 					text = list(self.text)
 					text.append(chr(key))
 					self.text = ''.join(text)
-				else:
-					print(key)
 			else:
 				#Numbers
 				if key in self._numbers:
@@ -119,10 +117,8 @@ class text_box(box):
 					text = list(self.text)
 					text.pop()
 					self.text = ''.join(text)
-				else:
-					print(key)
 		except:
-			print(key)
+			pass
 
 	def return_value(self):
 		if self.is_int:
