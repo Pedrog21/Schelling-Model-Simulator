@@ -17,7 +17,7 @@ class first_screen(screen):
 
 		#Adding Buttons
 		self.buttons = []
-		self.buttons += [button(750, 400, 300, 40, text="Regular Model", hor_space=125, ver_space=2)]
+		self.buttons += [button(800, 400, 250, 40, text="Regular Model", hor_space=75, ver_space=2)]
 		self.buttons += [button(150, 400, 250, 40, text="Neighbourhoods", hor_space=50, ver_space=2)]
 
 

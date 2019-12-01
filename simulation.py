@@ -47,7 +47,6 @@ while run:
 			inps = main.return_inputs()
 			screens["running"] = True
 			running = running_screen(width, height, win, first.action())
-			print(inps)
 			if first.action() == "Neighbourhoods":
 				running.set_inputs(inps["size"], inps["percent"], inps["empty"], inps["traits"], inps["min"], inps["max"], n_neighs=inps["neig"])
 			else:

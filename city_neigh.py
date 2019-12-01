@@ -35,6 +35,8 @@ class city_neigh:
 		self.update_iter = 0
 		self.running = True
 
+		self.trait_average = 100/self.n_traits
+
 		self.total_dim = self.rows*self.cols*n_neighs
 		raw_index = np.arange(self.total_dim)
 		n_empty = math.floor(self.empty_percent*self.total_dim)
@@ -61,8 +63,11 @@ class city_neigh:
 
 		self.unhappy = []
 		self.set_unhappy()
+
 		self.dim = 45//self.rows
+
 		self.info = dict()
+		self.info["Initial Average Segregation: "] = round(self.average_segregation())
 
 	def draw(self, window):
 		x0 = 15
@@ -85,7 +90,10 @@ class city_neigh:
 		k = 0
 		for i in self.info:
 			pos = vec(950, 250 + k*30)
-			text_surface = self.text_font.render(i + str(self.info[i]), False, self.text_colour)
+			if i[0] == "S":
+				text_surface = self.text_font.render(i + str(self.info[i]), False, self.text_colour)
+			else:
+				text_surface = self.text_font.render(i + str(self.info[i]) + "%", False, self.text_colour)
 			window.blit(text_surface, pos)
 			k += 1		
 
@@ -109,6 +117,7 @@ class city_neigh:
 
 		else:
 			self.running = False
+			self.info["Final Average Segregation: "] = round(self.average_segregation())
 			self.info["Separated Neighbourhoods: "] = self.count_sep_neighs()
 
 	def gen_index(self, value):
@@ -171,3 +180,20 @@ class city_neigh:
 					if neighbourhood[i,j] != val and neighbourhood[i,j] != 0:
 						return False
 		return True
+
+	def max_percent_neigh(self, neighbourhood):
+		unique, counts = np.unique(neighbourhood, return_counts=True)
+		if unique[0] == 0:
+			return (max(counts[1:])/sum(counts[1:]))*100
+		else:
+			return (max(counts)/sum(counts))*100 
+
+	def average_segregation(self):
+		sum_average = 0
+		for z in range(self.n_neighs):
+			sum_average += self.max_percent_neigh(self.city_grid[z])
+		print(self.trait_average)
+		print((sum_average/self.n_neighs - self.trait_average))
+		return (sum_average/self.n_neighs - self.trait_average)*100/(100 - self.trait_average)
+
+		 

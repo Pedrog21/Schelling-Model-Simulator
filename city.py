@@ -86,7 +86,7 @@ class city:
 		k = 0
 		for i in self.info:
 			pos = vec(950, 250 + k*30)
-			if(i[0] != "U"):
+			if i[0] != "U":
 				text_surface = self.text_font.render(i + str(self.info[i]) + "%", False, self.text_colour)
 			else:
 				text_surface = self.text_font.render(i + str(self.info[i]), False, self.text_colour)
