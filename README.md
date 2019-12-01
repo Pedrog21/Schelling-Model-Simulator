@@ -34,7 +34,7 @@ However, we do not have a feature that generates different neighbourhoods, meani
 - `text_box.py` contains a text_box class that inherites the properties of box and has several others. For example, it can be used to write text in it that can be converted in inputs for the simulation.
 - `first_screen.py` contains a class that generates the first window of the app.
 - `main_screen.py` contains a class that generates the window that is shown after choosing the category in the previous one.
-- `running_screen.py' contains a class that generates the window in which the simulation is run.
+- `running_screen.py` contains a class that generates the window in which the simulation is run.
 - `screen.py` is a general class for creating a window. It was not developed but all the other screen classes inherite from it.
 - `city.py` is a class used for the simulation of the **Regular Model** category. It contains the inputs given and uses them to do the simulation intended.
 - `city_neigh.py` is a class that is used for the simulation of the **Neighbourhoods** category. It contains the inputs given and uses them to do the simulation intended.
