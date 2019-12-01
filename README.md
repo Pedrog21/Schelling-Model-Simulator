@@ -1,6 +1,6 @@
 # Project Network Science
 
-This repository contains an app developed with the package pygame that simulates Schelling's Segregation Model.
+This repository contains an app developed with the package pygame that simulates the Schelling's Segregation Model (references at the end of README).
 In order to run everything properly, you need to have the following Python packages installed:
 - pygame
 - numpy
@@ -14,7 +14,7 @@ Then, you can press the button 'Run' and it will open the last screen and run th
 
 Regular Model
 
-The category 'Regular Model' runs Schelling's Model (we will leave references bellow) with just small modifications.
+The category 'Regular Model' runs Schelling's Model with just small modifications.
 You can set the number of traits (the distinguishing factors between the individuals) from 2 to 5, whereas Schelling's Model only allows 2.
 Also, you can vary the minimum and maximum percentages that each individual needs as neighbours with the same traits as themselves.
 The percentages of each trait can also be set, as well as the percentage of empty spots. 
@@ -40,4 +40,15 @@ Files
 - city.py is a class that is used for the simulation of the 'Regular Model' category. It contains the inputs given and uses them to do the simulation intended.
 - city_neigh.py is a class that is used for the simulation of the 'Neighbourhoods' category. It contains the inputs given and uses them to do the simulation intended.
 
+References
 
+- [1] McCown, F. Schelling’s Model of Segregation.
+Available from: http://nifty.stanford.edu/2014/mccown-schelling-model-segregation/
+- [2] Easley, D. and J. Kleinberg, Networks, crowds, and markets: Reasoning about a highly connected
+world. 2010: Cambridge University Press.
+Available from: https://www.cs.cornell.edu/home/kleinber/networks-book/networks-book.pdf
+- [3] Schelling, T.C., Dynamic models of segregation. Journal of Mathematical Sociology, 1971. 1(2):
+p. 143-186.
+Available from: http://norsemathology.org/longa/classes/stuff/DynamicModelsOfSegregation.pdf
+- [4] Hart, V. and N. Case. Parable of the polygons: A playable post on the shape of society.
+Available from: http://ncase.me/polygons
