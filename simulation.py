@@ -14,7 +14,7 @@ pygame.init()
 #Creating window and setting size
 height = 650
 width = 1200
-win = pygame.display.set_mode((width,height))#, pygame.FULLSCREEN)
+win = pygame.display.set_mode((width,height), pygame.FULLSCREEN)
 #Name of the app
 pygame.display.set_caption("Schelling Model's Simulation")
 
