@@ -6,7 +6,7 @@ vec = pygame.math.Vector2
 
 class city_neigh:
 
-	def __init__(self, neigh_size, n_neighs, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, max_iter=10000):
+	def __init__(self, neigh_size, n_neighs, percentages, empty_percent, n_traits=2, min_rate=0.3, max_rate=1, max_iter=3000):
 
 		self.max_iter = max_iter
 		self.square_size = 15
@@ -78,14 +78,14 @@ class city_neigh:
 				for j in range(self.cols):
 					self.square.fill(self.border_colour)
 					if self.city_grid[z, i, j] == 0:
-						pygame.draw.rect(self.square, self.empty_colour, 
+						pygame.draw.rect(self.square, self.empty_colour,
 							(self.border, self.border, self.square_size-self.border*2, self.square_size-self.border*2))
 					else:
-						pygame.draw.rect(self.square, self.trait_colours[int(self.city_grid[z, i, j]) - 1], 
+						pygame.draw.rect(self.square, self.trait_colours[int(self.city_grid[z, i, j]) - 1],
 							(self.border, self.border, self.square_size-self.border*2, self.square_size-self.border*2))
 
 					pos = vec(x0 + current_dims[0]*(self.rows*self.square_size + x0) + i*self.square_size - self.border, y0 + current_dims[1]*(self.cols*self.square_size + y0) + j*self.square_size - self.border)
-					window.blit(self.square, pos)	
+					window.blit(self.square, pos)
 
 		k = 0
 		for i in self.info:
@@ -95,7 +95,7 @@ class city_neigh:
 			else:
 				text_surface = self.text_font.render(i + str(self.info[i]) + "%", False, self.text_colour)
 			window.blit(text_surface, pos)
-			k += 1		
+			k += 1
 
 	def update(self):
 		if len(self.unhappy) > 0 and self.update_iter <= self.max_iter:
@@ -129,7 +129,7 @@ class city_neigh:
 
 	def gen_raw_index(self, index):
 		return int(index[0]*self.cols*self.rows + index[1]*self.cols + index[2])
-		
+
 	def set_unhappy(self):
 		for z in range(self.n_neighs):
 			for i in range(self.rows):
@@ -146,7 +146,7 @@ class city_neigh:
 		this_city_grid = self.city_grid[z]
 		pos = self.city_grid[z, x, y]
 
-		if pos != 0:			
+		if pos != 0:
 			for i in [-1,0,1]:
 				for j in [-1,0,1]:
 					if 0 <= x + i < self.rows and 0 <= y + j < self.cols and not (i == 0 and j == 0):
@@ -186,14 +186,10 @@ class city_neigh:
 		if unique[0] == 0:
 			return (max(counts[1:])/sum(counts[1:]))*100
 		else:
-			return (max(counts)/sum(counts))*100 
+			return (max(counts)/sum(counts))*100
 
 	def average_segregation(self):
 		sum_average = 0
 		for z in range(self.n_neighs):
 			sum_average += self.max_percent_neigh(self.city_grid[z])
-		print(self.trait_average)
-		print((sum_average/self.n_neighs - self.trait_average))
 		return (sum_average/self.n_neighs - self.trait_average)*100/(100 - self.trait_average)
-
-		 
